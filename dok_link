@@ -1,0 +1,44 @@
+menu admin sselesai
+lanjut ke bagian permohonan pemohon
+
+http://localhost/sipatra2025/index.php?page=admin
+
+<?php echo SITE_NAME; ?>
+http://localhost/sipatra2025/index.php?page=dashboard
+menampilkan sesi user
+
+<h3 class="page-title text-truncate text-dark font-weight-medium mb-1"><?php echo $_SESSION['name']; ?>
+    <br><?php echo "Level User: " . $_SESSION['level_user'] . " sebagai " . $_SESSION['level_jabatan']; ?>
+    <br><?php echo "Deskripsi Level:  "  . ($_SESSION['deskripsi_jabatan']); ?>
+
+</h3>
+
+<div class="card">
+    <div class="card-body">
+        <h4 class="card-title">Upload Data Dukung Pembelian Barang</h4>
+        <form action="proses_upload.php" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <label>Nota/Kwitansi Pembelian</label>
+                <input type="file" class="form-control" name="nota" accept=".pdf,.jpg,.jpeg,.png" required>
+                <small class="form-text text-muted">Format file: PDF, JPG, JPEG, PNG (Max.
+                    2MB)</small>
+            </div>
+            <div class="form-group">
+                <label>Foto Barang</label>
+                <input type="file" class="form-control" name="foto_barang" accept=".jpg,.jpeg,.png" required>
+                <small class="form-text text-muted">Format file: JPG, JPEG, PNG (Max. 2MB)</small>
+            </div>
+            <div class="form-group">
+                <label>Dokumen Pendukung Lainnya (Optional)</label>
+                <input type="file" class="form-control" name="dokumen_lain" accept=".pdf,.doc,.docx">
+                <small class="form-text text-muted">Format file: PDF, DOC, DOCX (Max. 5MB)</small>
+            </div>
+            <div class="form-group">
+                <label>Keterangan</label>
+                <textarea class="form-control" name="keterangan" rows="3"
+                    placeholder="Masukkan keterangan tambahan jika ada"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload</button>
+        </form>
+    </div>
+</div>
