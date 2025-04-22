@@ -42,11 +42,11 @@ if (!$conn) {
 
 // Pastikan konstanta hanya didefisikan jika belum ada sebelumnya
 if (!defined('SITE_TITLE')) {
-    define('SITE_TITLE', 'SIPATRA');
+    define('SITE_TITLE', 'SIAWAS');
 }
 // Pastikan konstanta hanya didefinisikan jika belum ada sebelumnya
 if (!defined('SITE_NAME')) {
-    define('SITE_NAME', 'SIPATRA – Sistem Pengawasan Akuntabilitas & Transparansi');
+    define('SITE_NAME', 'Si-AWAS – Sistem Pengawasan Akuntabilitas & Transparansi');
 }
 
 if (!defined('QRCODE_DIR')) {

@@ -12,9 +12,10 @@ if (session_status() == PHP_SESSION_NONE) {
 
 // Ambil data dari sesi
 $user_id = $_SESSION['user_id'] ?? 0;
-$nama_pejabat = $_SESSION['name'] ?? "Unknown";  // Nama pejabat (ppk, PPK, KPA)
-$jabatan_pejabat = $_SESSION['jabatan'] ?? "Unknown"; // Jabatan pejabat (ppk, PPK, KPA)
-$nip_pejabat = $_SESSION['nip_nik'] ?? "Unknown"; // NIP pejabat (ppk, PPK, KPA)
+$nama_pejabat = $_SESSION['name'] ?? "Unknown";  // Nama pejabat (Katimja, PPK, KPA)
+//$jabatan_pejabat = $_SESSION['jabatan'] ?? "Unknown"; // Jabatan pejabat (Katimja, PPK, KPA)
+$jabatan_pejabat = $_SESSION['level_jabatan'] ?? "Unknown";
+$nip_pejabat = $_SESSION['nip_nik'] ?? "Unknown"; // NIP pejabat (Katimja, PPK, KPA)
 $tanggal_ttd = date('Y-m-d H:i:s'); // Tanggal tanda tangan
 $tanggal_ttd2 = date('Y-m-d'); // format tanggal tanpa jam
 
@@ -22,7 +23,7 @@ $tanggal_ttd2 = date('Y-m-d'); // format tanggal tanpa jam
 if (isset($_GET['id_permohonan'])) {
     $id_permohonan = $_GET['id_permohonan'];
 } else {
-    echo "<script>alert('ID permohonan tidak ditemukan!'); window.location.href='dashboard.php';</script>";
+    echo "<script>alert('ID permohonan tidak ditemukan!'); window.location.href='index.php';</script>";
     exit();
 }
 
@@ -51,7 +52,7 @@ if (!is_dir($qrDirectory)) {
 }
 
 // Data untuk QR Code
-$qrData = "Nomor: $nomor_permohonan\nPPK: $nama_pejabat\nJabatan: $jabatan_pejabat\nNIP: $nip_pejabat\nTanggal: $tanggal_ttd2";  // Data untuk QR Code
+$qrData = "Nomor: $nomor_permohonan\nNama: $nama_pejabat\nJabatan: $jabatan_pejabat\nNIP: $nip_pejabat\nTanggal: $tanggal_ttd";  // Data untuk QR Code
 
 $logoPath = realpath(__DIR__ . '/../../assets/kkp.png');
 if (!$logoPath) {
@@ -99,7 +100,7 @@ try {
     exit();
 }
 
-// $qrPathDb = "/uploads/qrcode/ppk/{$nomor_permohonan}_{$tanggal_ttd2}_{$nama_pejabat_sanitized}.png";
+// $qrPathDb = "/uploads/qrcode/katimja/{$nomor_permohonan}_{$tanggal_ttd2}_{$nama_pejabat_sanitized}.png";
 // $qrPath = __DIR__ . $qrPathDb; // path absolut // digantikan oleh logika di atas
 
 // Simpan tanda tangan ke tabel signatures dan update status permohonan
@@ -113,13 +114,13 @@ try {
     $stmt_signature->execute();
 
 
-    // Update status pada tabel permohonan menjadi 2 (status 'Disetujui oleh ppk')
-    $new_status = 2;  // Status untuk disetujui oleh ppk
+    // Update status pada tabel permohonan menjadi 1 (status 'Disetujui oleh KATIMJA')
+    $new_status = 2;  // Status untuk disetujui oleh Katimja
     $stmt_permohonan = $conn->prepare("UPDATE permohonan SET status2 = ?, qr_code_ppk = ? WHERE id = ?");
     $stmt_permohonan->bind_param("isi", $new_status, $qrWebPath, $id_permohonan);
     $stmt_permohonan->execute();
-    // // Update status pada tabel permohonan menjadi 1 (status 'Disetujui oleh ppk')
-    // $new_status = 1;  // Status untuk disetujui oleh ppk
+    // // Update status pada tabel permohonan menjadi 1 (status 'Disetujui oleh KATIMJA')
+    // $new_status = 1;  // Status untuk disetujui oleh Katimja
     // $stmt_permohonan = $conn->prepare("UPDATE permohonan SET status2 = ?, tanggal_ttd = ?, qr_code_pejabat = ? WHERE id = ?");
     // $stmt_permohonan->bind_param("issi", $new_status, $tanggal_ttd, $qrWebPath, $id_permohonan);
     // $stmt_permohonan->execute();
@@ -128,6 +129,7 @@ try {
     $conn->commit();
 
     // Beri notifikasi berhasil dan arahkan kembali
+    //echo "<script>alert('Dokumen berhasil ditandatangani oleh $nama_pejabat.'); window.location.href='index.php?page=permohonan_masuk';</script>";
     echo "<script>alert('Dokumen berhasil ditandatangani oleh $nama_pejabat.'); window.history.back();</script>";
     exit();
 } catch (Exception $e) {

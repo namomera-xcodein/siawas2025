@@ -89,7 +89,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/images/favicon.png">
-    <title>SIPATRA – Sistem Pengawasan Akuntabilitas & Transparansi</title>
+    <title><?php echo $SITE_TITLE ?></title>
     <!-- Custom CSS -->
     <link href="../dist/css/style.min.css" rel="stylesheet">
     <!-- SweetAlert2 -->
@@ -177,16 +177,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <!-- This page plugin js -->
     <!-- ============================================================== -->
     <script>
-    $(".preloader").fadeOut();
+        $(".preloader").fadeOut();
 
-    <?php if (!empty($error)): ?>
-    Swal.fire({
-        icon: 'error',
-        title: 'Oops...',
-        text: '<?php echo htmlspecialchars($error, ENT_QUOTES, "UTF-8"); ?>',
-        confirmButtonColor: '#3085d6'
-    });
-    <?php endif; ?>
+        <?php if (!empty($error)): ?>
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: '<?php echo htmlspecialchars($error, ENT_QUOTES, "UTF-8"); ?>',
+                confirmButtonColor: '#3085d6'
+            });
+        <?php endif; ?>
     </script>
 
 </body>

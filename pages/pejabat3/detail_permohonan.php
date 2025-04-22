@@ -226,14 +226,89 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                     <h5 class="card-title">Detail Permohonan
                                         : <?= htmlspecialchars($permohonan['nomor_permohonan']); ?>
                                     </h5>
-                                    <h5 class="card-title">Mata Anggaran
+                                    <!-- <h5 class="card-title">Mata Anggaran
                                         : <?= htmlspecialchars($permohonan['mata_anggaran']); ?>
+                                    </h5> -->
+                                    <h5 class="card-title">
+                                        Mata Anggaran:
+                                        <?php if ($_SESSION['level_user'] == 3): ?>
+                                            <form method="POST" class="d-flex align-items-center mt-2">
+                                                <input type="hidden" name="update_mata_anggaran" value="1">
+                                                <input type="hidden" name="id_permohonan"
+                                                    value="<?= htmlspecialchars($permohonan['id']); ?>">
+                                                <input type="text" name="mata_anggaran"
+                                                    value="<?= htmlspecialchars($permohonan['mata_anggaran']); ?>"
+                                                    class="form-control form-control-sm me-2" style="width: 250px;"
+                                                    placeholder="Input nama / kode Mata Anggaran" required>
+                                                <button type="submit" class="btn btn-sm btn-primary">
+                                                    <?= empty($permohonan['mata_anggaran']) ? 'Tambahkan' : 'Edit'; ?>
+                                                </button>
+                                            </form>
+                                        <?php else: ?>
+                                            <?= htmlspecialchars($permohonan['mata_anggaran']); ?>
+                                        <?php endif; ?>
                                     </h5>
+
+                                    <?php
+                                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_mata_anggaran'])) {
+                                        if ($_SESSION['level_user'] == 3) {
+                                            $id_permohonan = isset($_POST['id_permohonan']) ? intval($_POST['id_permohonan']) : 0;
+                                            $mata_anggaran = trim($_POST['mata_anggaran'] ?? '');
+
+                                            if ($id_permohonan > 0 && !empty($mata_anggaran)) {
+                                                $mata_anggaran = mysqli_real_escape_string($conn, $mata_anggaran);
+
+                                                $query = "UPDATE permohonan SET mata_anggaran = '$mata_anggaran', updated_at = NOW() WHERE id = $id_permohonan";
+
+                                                if (mysqli_query($conn, $query)) {
+                                                    echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Mata anggaran berhasil diperbarui.',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = 'index.php?page=detail_permohonan&id=$id_permohonan';
+                    });
+                });
+                </script>";
+                                                } else {
+                                                    echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: 'Gagal memperbarui mata anggaran.'
+                    });
+                });
+                </script>";
+                                                }
+                                            } else {
+                                                echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Input tidak valid!',
+                    text: 'Silakan isi data dengan benar.'
+                });
+            });
+            </script>";
+                                            }
+                                        }
+                                    }
+                                    ?>
+
+
 
                                     <h5 class="card-title"><strong>Tanggal Permohonan:</strong>
                                         <?= date('d F Y', strtotime($permohonan['tanggal_permohonan'])); ?></h4>
                                         <h5 class="card-title"><strong>Total Harga:</strong> Rp.
-                                            <?= number_format($permohonan['grand_total_harga'], 0, ',', '.'); ?></h5>
+                                            <?= number_format($permohonan['grand_total_harga'], 0, ',', '.'); ?>
+                                        </h5>
                                         <h5 class="card-title">Detail Barang:</h5>
                                         <!-- NEW Table -->
                                         <table class="table table-striped table-bordered">
@@ -250,17 +325,18 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                             <tbody>
                                                 <?php $no = 1;
                                                 while ($barang = mysqli_fetch_assoc($detail_query)): ?>
-                                                <tr>
-                                                    <td><?= $no++; ?></td>
-                                                    <td><?= htmlspecialchars($barang['nama_barang']); ?></td>
-                                                    <td><?= htmlspecialchars($barang['satuan']); ?></td>
-                                                    <td>Rp. <?= number_format($barang['harga_satuan'], 0, ',', '.'); ?>
-                                                    </td>
-                                                    <td><?= $barang['jumlah_barang']; ?></td>
-                                                    <td>Rp.
-                                                        <?= number_format($barang['subtotal_harga'], 0, ',', '.'); ?>
-                                                    </td>
-                                                </tr>
+                                                    <tr>
+                                                        <td><?= $no++; ?></td>
+                                                        <td><?= htmlspecialchars($barang['nama_barang']); ?></td>
+                                                        <td><?= htmlspecialchars($barang['satuan']); ?></td>
+                                                        <td>Rp.
+                                                            <?= number_format($barang['harga_satuan'], 0, ',', '.'); ?>
+                                                        </td>
+                                                        <td><?= $barang['jumlah_barang']; ?></td>
+                                                        <td>Rp.
+                                                            <?= number_format($barang['subtotal_harga'], 0, ',', '.'); ?>
+                                                        </td>
+                                                    </tr>
                                                 <?php endwhile; ?>
                                             </tbody>
                                             <tfoot>
@@ -307,10 +383,10 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                                         Ketua Tim Kerja,
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_pejabat1'])): ?>
-                                                    <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_pejabat1']); ?>"
-                                                        alt="QR Code SPM" width="100">
+                                                        <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_pejabat1']); ?>"
+                                                            alt="QR Code Katimja" width="100">
                                                     <?php else: ?>
-                                                    <div class="card-title">Menunggu Persetujuan</div>
+                                                        <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
                                                     <br>
                                                     <h5><?= htmlspecialchars($name_pejabat_spm); ?></h5>
@@ -322,16 +398,15 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
                                             </div>
                                             <div class="col-lg-4 col-md-12">
-                                                <div class="text-center">
+                                                <div class="text-center">Mengetahui,<br>
                                                     <h5>Plt. Kasubbag Umum / PPK,<br>
-                                                        <br>
-                                                        <br>
+
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_ppk'])): ?>
-                                                    <img src="<?= htmlspecialchars($permohonan['qr_code_ppk']); ?>"
-                                                        alt="QR Code SPM" width="100">
+                                                        <img src="<?= $base_url ?><?= htmlspecialchars($permohonan['qr_code_ppk']); ?>"
+                                                            alt="QR Code PPK" width="100">
                                                     <?php else: ?>
-                                                    <div class="card-title">Menunggu Persetujuan</div>
+                                                        <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
                                                     <br>
                                                     <h5><?= htmlspecialchars($name_pejabat_ppk); ?></h5>
@@ -350,10 +425,10 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_kpa'])): ?>
-                                                    <img src="<?= htmlspecialchars($permohonan['qr_code_kpa']); ?>"
-                                                        alt="QR Code SPM" width="100"><br>
+                                                        <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_kpa']); ?>"
+                                                            alt="QR Code KPA" width="100"><br>
                                                     <?php else: ?>
-                                                    <div class="card-title">Menunggu Persetujuan</div>
+                                                        <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
                                                     <br>
                                                     <h5><?= htmlspecialchars($name_pejabat_kpa); ?></h5>
@@ -377,7 +452,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                         <div class="text-right">
                             <!-- <button type="submit" class="btn btn-info" id="addItem">Tambah</button> -->
                             <button onclick="window.print()" class="btn btn-danger">Cetak</button>
-                            <a href="index.php?page=all_permohonan" class="btn btn-primary">Kembali</a>
+                            <a href="index.php?page=permohonan_masuk" class="btn btn-primary">Kembali</a>
                         </div>
                     </div>
                 </div>
@@ -397,15 +472,15 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
-    $(document).ready(function() {
-        $('table.table-striped').DataTable({
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "lengthMenu": [10, 25, 50, 100]
+        $(document).ready(function() {
+            $('table.table-striped').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "lengthMenu": [10, 25, 50, 100]
+            });
         });
-    });
     </script>
 
 </body>

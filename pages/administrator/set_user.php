@@ -1,22 +1,25 @@
-<d?php if (session_status()==PHP_SESSION_NONE) { session_start(); } ?>
-    <!-- ============================================================== -->
-    <!-- SweetAlert2 CDN -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<?php
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+} ?>
+<!-- ============================================================== -->
+<!-- SweetAlert2 CDN -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <!-- Page wrapper  -->
+<!-- Page wrapper  -->
+<!-- ============================================================== -->
+<div class="page-wrapper">
     <!-- ============================================================== -->
-    <div class="page-wrapper">
-        <!-- ============================================================== -->
-        <!-- Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <div class="page-breadcrumb">
-            <div class="row"></div>
-            <br><br>
+    <!-- Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <div class="page-breadcrumb">
+        <div class="row"></div>
+        <br><br>
 
-            <div class="row">
-                <div class="col-7 align-self-center">
-                    <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">
-                        <?php
+        <div class="row">
+            <div class="col-7 align-self-center">
+                <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">
+                    <?php
                     $time = date('H');
                     if ($time >= 5 && $time <= 11) {
                         echo "Selamat Pagi";
@@ -30,13 +33,13 @@
                     echo " " . $_SESSION['name'] . "!";
                     //. "! Anda Login sebagai " . $_SESSION['role'];
                     ?>
-                    </h3>
-                    <div class="d-flex align-items-center">
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb m-0 p-0">
-                                <li class="breadcrumb-item">
-                                    <a href="index.php?page=dashboard">
-                                        <?php
+                </h3>
+                <div class="d-flex align-items-center">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb m-0 p-0">
+                            <li class="breadcrumb-item">
+                                <a href="index.php?page=dashboard">
+                                    <?php
                                     $time = date('H');
                                     if ($time >= 5 && $time <= 11) {
                                         echo "Hari Baru Mulai, Bismillah!";
@@ -52,70 +55,70 @@
                                     echo "<br>Saat ini Anda Login sebagai " . htmlspecialchars($level_jabatan);
 
                                     ?></a>
-                                </li>
-                            </ol>
-                        </nav>
-                    </div>
+                            </li>
+                        </ol>
+                    </nav>
                 </div>
-                <div class="col-5 align-self-center">
-                    <div class="customize-input float-right">
-                        <!-- <select
+            </div>
+            <div class="col-5 align-self-center">
+                <div class="customize-input float-right">
+                    <!-- <select
                         class="custom-select custom-select-set form-control bg-white border-0 custom-shadow custom-radius">
                         <option selected>Aug 19</option>
                         <option value="1">July 19</option>
                         <option value="2">Jun 19</option>
                     </select> -->
-                    </div>
                 </div>
             </div>
         </div>
-        <!-- ============================================================== -->
-        <!-- End Bread crumb and right sidebar toggle -->
-        <!-- ============================================================== -->
-        <!-- ============================================================== -->
-        <!-- Container fluid  -->
-        <!-- ============================================================== -->
-        <div class="container-fluid">
-            <!-- *************************************************************** -->
-            <!-- Start First Cards -->
-            <!-- *************************************************************** -->
-            <div class="card-group">
-                <div class="card border-right">
-                    <div class="card-body">
-                        <h4 class="card-title">Setting Data User</h4>
-                    </div>
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Bread crumb and right sidebar toggle -->
+    <!-- ============================================================== -->
+    <!-- ============================================================== -->
+    <!-- Container fluid  -->
+    <!-- ============================================================== -->
+    <div class="container-fluid">
+        <!-- *************************************************************** -->
+        <!-- Start First Cards -->
+        <!-- *************************************************************** -->
+        <div class="card-group">
+            <div class="card border-right">
+                <div class="card-body">
+                    <h4 class="card-title">Setting Data User</h4>
                 </div>
-
-
             </div>
 
 
-            <!-- *************************************************************** -->
-            <!-- Start Top Leader Table -->
-            <!-- *************************************************************** -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="card border-right">
+        </div>
+
+
+        <!-- *************************************************************** -->
+        <!-- Start Top Leader Table -->
+        <!-- *************************************************************** -->
+        <div class="row">
+            <div class="col-12">
+                <div class="card border-right">
+                    <div class="card-body">
+                        <!-- Search Box -->
                         <div class="card-body">
-                            <!-- Search Box -->
-                            <div class="card-body">
-                                <div class="row mb-3">
-                                    <div class="col-md-6">
-                                        <div class="input-group">
-                                            <input type="text" class="form-control" id="searchInput"
-                                                placeholder="Cari user...">
-                                            <div class="input-group-append">
-                                                <button class="btn btn-outline-secondary" type="button"
-                                                    onclick="searchTable()">
-                                                    <i class="fas fa-search"></i> Cari
-                                                </button>
-                                            </div>
+                            <div class="row mb-3">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" id="searchInput"
+                                            placeholder="Cari user...">
+                                        <div class="input-group-append">
+                                            <button class="btn btn-outline-secondary" type="button"
+                                                onclick="searchTable()">
+                                                <i class="fas fa-search"></i> Cari
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                            <script>
+                        <script>
                             function searchTable() {
                                 var input, filter, table, tr, td, i, txtValue;
                                 input = document.getElementById("searchInput");
@@ -163,54 +166,54 @@
                                     }
                                 });
                             });
-                            </script>
+                        </script>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex align-items-center mb-4">
+
+                            <h5 class="card-title">Data User</h5>
+                            <div class="ml-auto">
+                                <div class="dropdown sub-dropdown">
+                                    <button class="btn btn-md btn-cyan"
+                                        onclick="window.location.href='index.php?page=add_user'">
+                                        <i class="fas fa-plus"></i> Tambah User Baru
+                                    </button>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center mb-4">
-
-                                <h5 class="card-title">Data User</h5>
-                                <div class="ml-auto">
-                                    <div class="dropdown sub-dropdown">
-                                        <button class="btn btn-md btn-cyan"
-                                            onclick="window.location.href='index.php?page=add_user'">
-                                            <i class="fas fa-plus"></i> Tambah User Baru
-                                        </button>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                        <div class="table-responsive table-striped">
+                    <div class="table-responsive table-striped">
 
 
-                            <table class="table no-wrap v-middle mb-0">
-                                <thead>
-                                    <tr class="border-0">
-                                        <th class="text-dark mb-0 font-16 font-weight-medium text-center">No.</th>
-                                        <th class="text-dark mb-0 font-16 font-weight-medium text-center">Nama User
-                                        </th>
-                                        <th class="text-dark mb-0 font-16 font-weight-medium text-center">NIP/NIK</th>
-                                        <th class="text-dark mb-0 font-16 font-weight-medium text-center">Jabatan</th>
-                                        <!-- <th class="text-dark mb-0 font-16 font-weight-medium text-center">Password</th> -->
-                                        <th class="text-dark mb-0 font-16 font-weight-medium text-center">Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php
-                                    $no = 1;
-                                    $query = mysqli_prepare($conn, "SELECT u.*, l.level_jabatan FROM users u LEFT JOIN level l ON u.level_user = l.id_level ");
-                                    mysqli_stmt_execute($query);
-                                    $result = mysqli_stmt_get_result($query);
+                        <table class="table no-wrap v-middle mb-0">
+                            <thead>
+                                <tr class="border-0">
+                                    <th class="text-dark mb-0 font-16 font-weight-medium text-center">No.</th>
+                                    <th class="text-dark mb-0 font-16 font-weight-medium text-center">Nama User
+                                    </th>
+                                    <th class="text-dark mb-0 font-16 font-weight-medium text-center">NIP/NIK</th>
+                                    <th class="text-dark mb-0 font-16 font-weight-medium text-center">Jabatan</th>
+                                    <!-- <th class="text-dark mb-0 font-16 font-weight-medium text-center">Password</th> -->
+                                    <th class="text-dark mb-0 font-16 font-weight-medium text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $no = 1;
+                                $query = mysqli_prepare($conn, "SELECT u.*, l.level_jabatan FROM users u LEFT JOIN level l ON u.level_user = l.id_level ");
+                                mysqli_stmt_execute($query);
+                                $result = mysqli_stmt_get_result($query);
 
-                                    // Proses Hapus User
-                                    if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
-                                        $id_user = $_GET['id'];
+                                // Proses Hapus User
+                                if (isset($_GET['action']) && $_GET['action'] == 'delete' && isset($_GET['id'])) {
+                                    $id_user = $_GET['id'];
 
-                                        // Pastikan ID hanya angka untuk keamanan
-                                        if (!is_numeric($id_user)) {
-                                            echo "<script>
+                                    // Pastikan ID hanya angka untuk keamanan
+                                    if (!is_numeric($id_user)) {
+                                        echo "<script>
                                                 Swal.fire({
                                                     title: 'Error!',
                                                     text: 'ID tidak valid!',
@@ -219,20 +222,20 @@
                                                     window.location.href = 'index.php?page=set_user';
                                                 });
                                                 </script>";
-                                            exit();
-                                        }
+                                        exit();
+                                    }
 
-                                        // Cek apakah user ada sebelum menghapus
-                                        $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id=?");
-                                        mysqli_stmt_bind_param($stmt, "i", $id_user);
-                                        mysqli_stmt_execute($stmt);
-                                        $check = mysqli_stmt_get_result($stmt);
+                                    // Cek apakah user ada sebelum menghapus
+                                    $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE id=?");
+                                    mysqli_stmt_bind_param($stmt, "i", $id_user);
+                                    mysqli_stmt_execute($stmt);
+                                    $check = mysqli_stmt_get_result($stmt);
 
-                                        if (mysqli_num_rows($check) > 0) {
-                                            $delete_stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id=?");
-                                            mysqli_stmt_bind_param($delete_stmt, "i", $id_user);
-                                            if (mysqli_stmt_execute($delete_stmt)) {
-                                                echo "<script>
+                                    if (mysqli_num_rows($check) > 0) {
+                                        $delete_stmt = mysqli_prepare($conn, "DELETE FROM users WHERE id=?");
+                                        mysqli_stmt_bind_param($delete_stmt, "i", $id_user);
+                                        if (mysqli_stmt_execute($delete_stmt)) {
+                                            echo "<script>
                                                         Swal.fire({
                                                             icon: 'success',
                                                             title: 'Berhasil!',
@@ -243,9 +246,9 @@
                                                             window.location.href = 'index.php?page=set_user';
                                                         });
                                                     </script>";
-                                                exit();
-                                            } else {
-                                                echo "<script>
+                                            exit();
+                                        } else {
+                                            echo "<script>
                                                         Swal.fire({
                                                             title: 'Error!',
                                                             text: 'Gagal menghapus user!',
@@ -254,10 +257,10 @@
                                                             window.location.href = 'index.php?page=set_user';
                                                         });
                                                     </script>";
-                                                exit();
-                                            }
-                                        } else {
-                                            echo "<script>
+                                            exit();
+                                        }
+                                    } else {
+                                        echo "<script>
                                                     Swal.fire({
                                                         title: 'Error!', 
                                                         text: 'User tidak ditemukan!',
@@ -266,11 +269,11 @@
                                                         window.location.href = 'index.php?page=set_user';
                                                     });
                                                 </script>";
-                                            exit();
-                                        }
+                                        exit();
                                     }
-                                    while ($data = mysqli_fetch_array($result)) {
-                                    ?> <tr>
+                                }
+                                while ($data = mysqli_fetch_array($result)) {
+                                ?> <tr>
                                         <td class="border-top-0 px-2 py-4  text-center">
                                             <?php echo $no++; ?>
                                         </td>
@@ -293,8 +296,7 @@
 
                                         <td class="text-dark mb-0 font-14 font-weight-medium text-wrap">
                                             <?php echo $data['jabatan']; ?><br>
-                                            <span
-                                                class="text-muted font-14"><?php echo $data['level_jabatan']; ?></span>
+                                            <span class="text-muted font-14"><?php echo $data['level_jabatan']; ?></span>
                                         </td>
 
 
@@ -325,22 +327,22 @@
                                         </a> -->
                                         </td>
                                     </tr>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                <?php } ?>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- *************************************************************** -->
-        <!-- End Top Leader Table -->
-        <!-- *************************************************************** -->
     </div>
+    <!-- *************************************************************** -->
+    <!-- End Top Leader Table -->
+    <!-- *************************************************************** -->
+</div>
 
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-    <script>
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         const deleteButtons = document.querySelectorAll('.btn-delete');
 
@@ -367,4 +369,4 @@
             });
         });
     });
-    </script>
+</script>

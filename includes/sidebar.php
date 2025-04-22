@@ -34,6 +34,12 @@ error_reporting(E_ALL);
                         aria-expanded="false"><i data-feather="file-text" class="feather-icon"></i><span
                             class="hide-menu">Permohonan ditolak</span></a>
                 </li>
+                <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="index.php?page=permohonan_proses"
+                        aria-expanded="false"><i data-feather="file-text" class="feather-icon"></i><span
+                            class="hide-menu">Permohonan Proses
+                            Belanja</span></a>
+                </li>
 
                 <!-- <li class="sidebar-item">
                     <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><i

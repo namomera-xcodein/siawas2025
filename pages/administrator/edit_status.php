@@ -77,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     } else {
                         echo "Selamat Malam";
                     }
-                    echo " " . $_SESSION['name'] . "! Anda Login sebagai " . $_SESSION['role'];
+                    echo " " . $_SESSION['name'] . "<br>! Anda Login sebagai " . $_SESSION['level_jabatan'];
                     ?>
                 </h3>
                 <div class="d-flex align-items-center">

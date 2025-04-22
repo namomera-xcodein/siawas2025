@@ -13,7 +13,7 @@ error_reporting(E_ALL);
             <ul id="sidebarnav">
                 <li class="sidebar-item">
                     <a class="sidebar-link sidebar-link" href="index.php?page=dashboard" aria-expanded="false"><i
-                            data-feather="home" class="feather-icon"></i><span class="hide-menu">Pejabat
+                            data-feather="home" class="feather-icon"></i><span class="hide-menu">Katimja
                             Dashboard</span></a>
                 </li>
                 <!-- Form Permohonan -->
@@ -27,13 +27,13 @@ error_reporting(E_ALL);
                         </span></a>
                 </li>
 
-                <li class="sidebar-item">
+                <!-- <li class="sidebar-item">
                     <a class="sidebar-link sidebar-link" href="index.php?page=riwayat_permohonan"
                         aria-expanded="false"><i data-feather="file-text" class="feather-icon"></i><span
                             class="hide-menu"> Riwayat
                             Persetujuan
                         </span></a>
-                </li>
+                </li> -->
                 <li class="sidebar-item text-muted">
                     <a class="sidebar-link sidebar-link" href="index.php?page=ditolak" aria-expanded="false"><i
                             data-feather="file-text" class="feather-icon"></i><span class="hide-menu"> Ditolak

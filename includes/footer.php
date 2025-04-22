@@ -4,8 +4,8 @@
 include_once('config/config.php');
 ?>
 <!-- ============================================================== -->
-<footer class="footer text-center text-muted">SIPATRA – Sistem Pengawasan Akuntabilitas & Transparansi <a
-        href="#">Xcodein.com - SIPATRA</a>.</footer>
+<footer class="footer text-center text-muted">Si-AWAS – Sistem Pengawasan Akuntabilitas & Transparansi <a href="#">by:
+        Xcodein.com - © <?php echo date('Y'); ?></a>.</footer>
 <!-- ============================================================== -->
 <!-- End footer -->
 <!-- ============================================================== -->

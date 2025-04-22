@@ -62,8 +62,10 @@ $nama_kpa = $pejabat['kpa']['name'] ?? '';
 $nip_kpa = $pejabat['kpa']['nip_nik'] ?? '';
 
 $qr_code_pejabat1 = 'uploads/qrcodes/katimja/' . ($pejabat['katimja']['id_user'] ?? '') . '.png';
-$ttd_ppk = 'uploads/qrcodes/ppk/' . ($pejabat['ppk']['id_user'] ?? '') . '.png';
-$ttd_kpa = 'uploads/qrcodes/kpa/' . ($pejabat['kpa']['id_user'] ?? '') . '.png';
+$ttd_ppk = 'uploads/qrcode/ppk/' . ($pejabat['ppk']['id_user'] ?? '') . '.png';
+$ttd_kpa = 'uploads/qrcode/kpa/' . ($pejabat['kpa']['id_user'] ?? '') . '.png';
+$qr_code_ppk = 'uploads/qrcodes/ppk/' . ($pejabat['ppk']['id_user'] ?? '') . '.png';
+$qr_code_kpa = 'uploads/qrcodes/kpa/' . ($pejabat['kpa']['id_user'] ?? '') . '.png';
 
 ?>
 
@@ -120,7 +122,7 @@ $ttd_kpa = 'uploads/qrcodes/kpa/' . ($pejabat['kpa']['id_user'] ?? '') . '.png';
     <div class="container mt-4">
         <div class="text-center">
             <h3>BLANKO PERMINTAAN</h3>
-            <p><i>Form ini dicetak dari aplikasi SIPATRA BPPP Ambon</i></p>
+            <p><i>Form ini dicetak dari aplikasi <b>Si-Awas BPPP Ambon</b></i></p>
         </div>
 
         <table class="table mt-4">
@@ -215,7 +217,8 @@ $ttd_kpa = 'uploads/qrcodes/kpa/' . ($pejabat['kpa']['id_user'] ?? '') . '.png';
                             <br><br><br>
                             <div class="card-title">Menunggu Persetujuan</div><?php endif; ?>
                             <!-- Nama & NIP Katimja -->
-                            <br><?= $katimja['katimja_name'] ?><br>NIP:
+                            <br><?= $katimja['katimja_name'] ?><br>
+                            NIP:
                             <?= $katimja['katimja_nip'] ?>
                         </td>
                         <td></td>
@@ -225,31 +228,32 @@ $ttd_kpa = 'uploads/qrcodes/kpa/' . ($pejabat['kpa']['id_user'] ?? '') . '.png';
 
                         <td>Mengetahui,
                             <br>
-                            <?= $ppkData['jabatan'] ?? '-' ?><br><br>
+                            <?= $ppkData['jabatan'] ?? '-' ?><br>
                             <?php if (file_exists($ppkData['qr_code'])): ?>
-                            <img src="<?= $base_url . $ppkData['qr_code'] ?>" width="120">
+                            <img src="<?= $base_url . $ppkData['ttd_ppk'] ?>" alt="QR ppk" width="100">
                             <?php else: ?>
-                            <em><?= $ppkData['qr_code'] ?></em>
-                            <?php endif; ?>
-                            <br><br><br>
+                            <img src="<?= $base_url . $ppkData['qr_code'] ?>" alt="QR PPK" width="100"> <?php endif; ?>
+                            <br>
                             <?= $ppkData['name'] ?? '-' ?><br>
                             NIP: <?= $ppkData['nip_nik'] ?? '-' ?>
                         </td>
                     </tr>
                     <tr>
                         <td></td>
-                        <?php $kpaData = getDataKPA($conn, $id_permohonan);
+                        <?php
+                        $kpaData = getDataKPA($conn, $id_permohonan);
                         ?>
                         <td>Menyetujui,
                             <br><?= $kpaData['jabatan'] ?? '-' ?>,<br><br>
-                            <?php if (file_exists($kpaData['qr_code'])): ?>
-                            <img src="<?= $base_url . $kpaData['qr_code'] ?>" width="120">
+                            <?php
+                            // Cek apakah file QR code tersedia dan tidak kosong
+                            if (!empty($kpaData['qr_code']) && file_exists($kpaData['qr_code'])): ?>
+                            <img src="<?= $base_url . $kpaData['qr_code'] ?>" width="100">
                             <?php else: ?>
-                            <em><?= $kpaData['qr_code'] ?></em>
+                            <br><em>--Menunggu Persetujuan--</em>
                             <?php endif; ?>
                             <br><br><br><?= $kpaData['name'] ?? '-' ?>
-                            <br>NIP:
-                            <?= $kpaData['nip_nik'] ?? '-' ?>
+                            <br>NIP: <?= $kpaData['nip_nik'] ?? '-' ?>
                         </td>
                         <td></td>
                     </tr>

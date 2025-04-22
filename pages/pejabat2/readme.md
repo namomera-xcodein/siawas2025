@@ -7,3 +7,12 @@ $new_status = 'Disetujui oleh KATIMJA';  // Status level yang sesuai dengan leve
     $conn->rollback();
     echo "<script>alert('Proses penandatanganan gagal! Error: " . addslashes($e->getMessage()) . "'); window.location.href='index.php?page=permohonan_new';</script>";
 exit(); jangan direct ke permohonan_new kembali kan ke window.history.back();
+
+<?php
+echo "<pre>";
+var_dump($_SESSION);
+echo "</pre>";
+exit();
+
+
+?>

@@ -15,13 +15,13 @@
                     <?php
                     $time = date('H');
                     if ($time >= 5 && $time <= 11) {
-                        echo "Selamat Pagi";
+                        echo "Selamat Pagi, ";
                     } elseif ($time >= 12 && $time <= 15) {
-                        echo "Selamat Siang";
+                        echo "Selamat Siang, ";
                     } elseif ($time >= 16 && $time <= 18) {
-                        echo "Selamat Sore";
+                        echo "Selamat Sore, ";
                     } else {
-                        echo "Selamat Malam";
+                        echo "Selamat Malam, ";
                     }
                     echo " " . $_SESSION['name'] . "! ek<br>
                                 Halo, Anda Login sebagai " . $_SESSION['role'] . "<br>userid anda adalah" . $_SESSION['user_id'] . "! ";
@@ -30,7 +30,7 @@
                 <div class="d-flex align-items-center">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb m-0 p-0">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard Keuangan</a></li>
+                            <li class="breadcrumb-item"><a href="index.html">Dashboard Ketua Tim Kerja</a></li>
                         </ol>
                     </nav>
                 </div>
@@ -105,7 +105,7 @@
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex align-items-center mb-4">
-                            <h4 class="card-title">Data User</h4>
+                            <h4 class="card-title">xData User</h4>
                             <div class="ml-auto">
                                 <div class="dropdown sub-dropdown">
                                     <button class="btn btn-link text-muted dropdown-toggle" type="button" id="dd1"
@@ -152,31 +152,31 @@
                                         ?>
 
                                         <script>
-                                        const ctx = document.getElementById('statusChart').getContext('2d');
-                                        new Chart(ctx, {
-                                            type: 'pie', // You can change to 'bar' for bar chart
-                                            data: {
-                                                labels: <?php echo json_encode($labels); ?>,
-                                                datasets: [{
-                                                    data: <?php echo json_encode($data); ?>,
-                                                    backgroundColor: <?php echo json_encode($colors); ?>,
-                                                    borderWidth: 1
-                                                }]
-                                            },
-                                            options: {
-                                                responsive: true,
-                                                maintainAspectRatio: false,
-                                                plugins: {
-                                                    legend: {
-                                                        position: 'top',
-                                                    },
-                                                    title: {
-                                                        display: true,
-                                                        text: 'Distribusi Status Permohonan'
+                                            const ctx = document.getElementById('statusChart').getContext('2d');
+                                            new Chart(ctx, {
+                                                type: 'pie', // You can change to 'bar' for bar chart
+                                                data: {
+                                                    labels: <?php echo json_encode($labels); ?>,
+                                                    datasets: [{
+                                                        data: <?php echo json_encode($data); ?>,
+                                                        backgroundColor: <?php echo json_encode($colors); ?>,
+                                                        borderWidth: 1
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    plugins: {
+                                                        legend: {
+                                                            position: 'top',
+                                                        },
+                                                        title: {
+                                                            display: true,
+                                                            text: 'Distribusi Status Permohonan'
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        });
+                                            });
                                         </script>
 
 
@@ -203,41 +203,41 @@
                                         ?>
 
                                         <script>
-                                        const userCtx = document.getElementById('userChart').getContext('2d');
-                                        new Chart(userCtx, {
-                                            type: 'bar',
-                                            data: {
-                                                labels: <?php echo json_encode($userLabels); ?>,
-                                                datasets: [{
-                                                    label: 'Jumlah Permohonan',
-                                                    data: <?php echo json_encode($userData); ?>,
-                                                    backgroundColor: '#4B89DC',
-                                                    borderColor: '#3671BC',
-                                                    borderWidth: 1
-                                                }]
-                                            },
-                                            options: {
-                                                responsive: true,
-                                                maintainAspectRatio: false,
-                                                scales: {
-                                                    y: {
-                                                        beginAtZero: true,
-                                                        ticks: {
-                                                            stepSize: 1
+                                            const userCtx = document.getElementById('userChart').getContext('2d');
+                                            new Chart(userCtx, {
+                                                type: 'bar',
+                                                data: {
+                                                    labels: <?php echo json_encode($userLabels); ?>,
+                                                    datasets: [{
+                                                        label: 'Jumlah Permohonan',
+                                                        data: <?php echo json_encode($userData); ?>,
+                                                        backgroundColor: '#4B89DC',
+                                                        borderColor: '#3671BC',
+                                                        borderWidth: 1
+                                                    }]
+                                                },
+                                                options: {
+                                                    responsive: true,
+                                                    maintainAspectRatio: false,
+                                                    scales: {
+                                                        y: {
+                                                            beginAtZero: true,
+                                                            ticks: {
+                                                                stepSize: 1
+                                                            }
+                                                        }
+                                                    },
+                                                    plugins: {
+                                                        legend: {
+                                                            position: 'top',
+                                                        },
+                                                        title: {
+                                                            display: true,
+                                                            text: 'Distribusi Permohonan per Pengguna'
                                                         }
                                                     }
-                                                },
-                                                plugins: {
-                                                    legend: {
-                                                        position: 'top',
-                                                    },
-                                                    title: {
-                                                        display: true,
-                                                        text: 'Distribusi Permohonan per Pengguna'
-                                                    }
                                                 }
-                                            }
-                                        });
+                                            });
                                         </script>
                                     </div>
                                 </div>

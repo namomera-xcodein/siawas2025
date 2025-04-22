@@ -7,7 +7,8 @@ if (!isset($_SESSION['user_id'])) {
     header('Location: ../auth/login.php');
     exit;
 }
-
+$name_katimja = $_SESSION['name'] ?? '-';
+$nip_nik_katimja = $_SESSION['nip_nik'] ?? '-';
 
 
 // Dapatkan ID permohonan dari URL
@@ -171,7 +172,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
                                 </div>
                                 <div class="table-responsive">
-                                    <div class="progress mt-4">
+                                    <!-- <div class="progress mt-4">
                                         <div class="progress-bar progress-bar-striped progress-bar-animated"
                                             role="progressbar" aria-valuenow="<?php
                                                                                 if ($permohonan['status'] == 'Menunggu Persetujuan SPM') {
@@ -204,7 +205,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                             }
                                             ?>"
                                         </p>
-                                    </div>
+                                    </div> -->
                                     <div class="row">
                                         <div class="col-12">
                                             <!-- <h4 class="mb-0">Detail Permohonan</h4> -->
@@ -250,28 +251,28 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                                 </thead>
                                                 <?php $no = 1;
                                                 while ($barang = mysqli_fetch_assoc($detail_query)): ?>
-                                                <tbody>
-                                                    <tr>
-                                                        <td><?= $no++; ?></td>
-                                                        <td><?= htmlspecialchars($barang['nama_barang']); ?></td>
-                                                        <td><?= htmlspecialchars($barang['satuan']); ?></td>
-                                                        <td>Rp.
-                                                            <?= number_format($barang['harga_satuan'], 0, ',', '.'); ?>
-                                                        </td>
-                                                        <td><?= $barang['jumlah_barang']; ?></td>
-                                                        <td>Rp.
-                                                            <?= number_format($barang['subtotal_harga'], 0, ',', '.'); ?>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th colspan="5" class="text-end">Jumlah</th>
-                                                        <th>Rp.
-                                                            <?= number_format($permohonan['grand_total_harga'], 0, ',', '.'); ?>
-                                                        </th>
-                                                    </tr>
-                                                </tfoot>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td><?= $no++; ?></td>
+                                                            <td><?= htmlspecialchars($barang['nama_barang']); ?></td>
+                                                            <td><?= htmlspecialchars($barang['satuan']); ?></td>
+                                                            <td>Rp.
+                                                                <?= number_format($barang['harga_satuan'], 0, ',', '.'); ?>
+                                                            </td>
+                                                            <td><?= $barang['jumlah_barang']; ?></td>
+                                                            <td>Rp.
+                                                                <?= number_format($barang['subtotal_harga'], 0, ',', '.'); ?>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th colspan="5" class="text-end">Jumlah</th>
+                                                            <th>Rp.
+                                                                <?= number_format($permohonan['grand_total_harga'], 0, ',', '.'); ?>
+                                                            </th>
+                                                        </tr>
+                                                    </tfoot>
                                                 <?php endwhile; ?>
                                             </table>
                                         </div>
@@ -305,21 +306,38 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                         <div class="row">
                                             <div class="col-lg-4 col-md-12">
                                                 <div class="text-center">
+                                                    <h5>Mengetahui,<br>Ketua Tim Kerja,</h5>
+
+                                                    <?php if (!empty($permohonan['qr_code_pejabat1'])): ?>
+                                                        <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_pejabat1']); ?>"
+                                                            alt="Katimja" width="100">
+                                                    <?php else: ?>
+                                                        <div class="card-title">Menunggu Persetujuan</div>
+                                                    <?php endif; ?>
+
+                                                    <br>
+                                                    <h5><?= htmlspecialchars($name_katimja); ?></h5>
+                                                    <h5>NIP: <?= htmlspecialchars($nip_nik_katimja); ?></h5>
+                                                </div>
+                                            </div>
+
+                                            <!-- <div class="col-lg-4 col-md-12">
+                                                <div class="text-center">
                                                     <h5>Mengetahui,<br>
                                                         Ketua Tim Kerja,
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_pejabat1'])): ?>
-                                                    <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_pejabat1']); ?>"
-                                                        alt="KAtimja" width="100">
+                                                        <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_pejabat1']); ?>"
+                                                            alt="Katimja" width="100">
                                                     <?php else: ?>
-                                                    <div class="card-title">Menunggu Persetujuan</div>
+                                                        <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
                                                     <br>
                                                     <h5><?= htmlspecialchars($name_pejabat_spm); ?></h5>
                                                     <h5>NIP:<?= htmlspecialchars($nip_nik_pejabat_spm); ?></h5>
 
                                                 </div>
-                                            </div>
+                                            </div> -->
                                             <div class="col-lg-4 col-md-12">
 
                                             </div>
@@ -330,10 +348,10 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                                         <br>
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_ppk'])): ?>
-                                                    <img src="<?= htmlspecialchars($permohonan['qr_code_ppk']); ?>"
-                                                        alt="QR Code SPM" width="100">
+                                                        <img src="<?= htmlspecialchars($permohonan['qr_code_ppk']); ?>"
+                                                            alt="QR Code SPM" width="100">
                                                     <?php else: ?>
-                                                    <div class="card-title">Menunggu Persetujuan</div>
+                                                        <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
                                                     <br>
                                                     <h5><?= htmlspecialchars($name_pejabat_ppk); ?></h5>
@@ -352,10 +370,10 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_kpa'])): ?>
-                                                    <img src="<?= htmlspecialchars($permohonan['qr_code_kpa']); ?>"
-                                                        alt="QR Code SPM" width="100"><br>
+                                                        <img src="<?= htmlspecialchars($permohonan['qr_code_kpa']); ?>"
+                                                            alt="QR Code SPM" width="100"><br>
                                                     <?php else: ?>
-                                                    <div class="card-title">Menunggu Persetujuan</div>
+                                                        <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
                                                     <br>
                                                     <h5><?= htmlspecialchars($name_pejabat_kpa); ?></h5>
@@ -374,10 +392,10 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                             </div>
                         </div>
                     </div>
-                    <div class="form-actions alert-danger">
+                    <div class="form-actions">
                         <div class="text-right">
-                            <!-- <button type="submit" class="btn btn-info" id="addItem">Tambah</button> -->
-                            <button onclick="window.print()" class="btn btn-primary">Cetak</button>
+
+                            <!-- <button onclick="window.print()" class="btn btn-primary">Cetak</button> -->
                             <a href="index.php?page=all_permohonan" class="btn btn-danger">Kembali</a>
                         </div>
                     </div>
@@ -400,15 +418,15 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
-    $(document).ready(function() {
-        $('table.table-striped').DataTable({
-            "paging": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "lengthMenu": [10, 25, 50, 100]
+        $(document).ready(function() {
+            $('table.table-striped').DataTable({
+                "paging": true,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "lengthMenu": [10, 25, 50, 100]
+            });
         });
-    });
     </script>
 
 </body>

@@ -1,3 +1,6 @@
+<?php
+include_once 'config/config.php';
+?>
 <!DOCTYPE html>
 
 <html dir="ltr" lang="id">
@@ -230,23 +233,23 @@
                                     </div>
                                 </form>
                                 <script>
-                                    function searchPermohonan(str) {
-                                        if (str.length > 0) {
-                                            $.ajax({
-                                                url: 'search_permohonan.php',
-                                                method: 'POST',
-                                                data: {
-                                                    search: str
-                                                },
-                                                success: function(response) {
-                                                    $('#searchResults').html(response);
-                                                    $('#searchResults').show();
-                                                }
-                                            });
-                                        } else {
-                                            $('#searchResults').hide();
-                                        }
+                                function searchPermohonan(str) {
+                                    if (str.length > 0) {
+                                        $.ajax({
+                                            url: 'search_permohonan.php',
+                                            method: 'POST',
+                                            data: {
+                                                search: str
+                                            },
+                                            success: function(response) {
+                                                $('#searchResults').html(response);
+                                                $('#searchResults').show();
+                                            }
+                                        });
+                                    } else {
+                                        $('#searchResults').hide();
                                     }
+                                }
                                 </script>
                             </a>
                         </li>

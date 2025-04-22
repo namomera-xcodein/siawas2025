@@ -13,7 +13,8 @@ if (session_status() == PHP_SESSION_NONE) {
 // Ambil data dari sesi
 $user_id = $_SESSION['user_id'] ?? 0;
 $nama_pejabat = $_SESSION['name'] ?? "Unknown";  // Nama pejabat (Katimja, PPK, KPA)
-$jabatan_pejabat = $_SESSION['jabatan'] ?? "Unknown"; // Jabatan pejabat (Katimja, PPK, KPA)
+//$jabatan_pejabat = $_SESSION['jabatan'] ?? "Unknown"; // Jabatan pejabat (Katimja, PPK, KPA)
+$jabatan_pejabat = $_SESSION['level_jabatan'] ?? "Unknown";
 $nip_pejabat = $_SESSION['nip_nik'] ?? "Unknown"; // NIP pejabat (Katimja, PPK, KPA)
 $tanggal_ttd = date('Y-m-d H:i:s'); // Tanggal tanda tangan
 $tanggal_ttd2 = date('Y-m-d'); // format tanggal tanpa jam
@@ -51,7 +52,7 @@ if (!is_dir($qrDirectory)) {
 }
 
 // Data untuk QR Code
-$qrData = "Nomor: $nomor_permohonan\nKatimja: $nama_pejabat\nJabatan: $jabatan_pejabat\nNIP: $nip_pejabat\nTanggal: $tanggal_ttd2";  // Data untuk QR Code
+$qrData = "Nomor: $nomor_permohonan\nKatimja: $nama_pejabat\nJabatan: $jabatan_pejabat\nNIP: $nip_pejabat\nTanggal: $tanggal_ttd";  // Data untuk QR Code
 
 $logoPath = realpath(__DIR__ . '/../../assets/kkp.png');
 if (!$logoPath) {
@@ -128,7 +129,7 @@ try {
     $conn->commit();
 
     // Beri notifikasi berhasil dan arahkan kembali
-    echo "<script>alert('Dokumen berhasil ditandatangani oleh $nama_pejabat.'); window.location.href='index.php?page=riwayat_permohonan';</script>";
+    echo "<script>alert('Dokumen berhasil ditandatangani oleh $nama_pejabat.'); window.history.back();</script>";
     exit();
 } catch (Exception $e) {
     // Rollback transaksi jika terjadi error

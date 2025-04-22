@@ -1,42 +1,7 @@
 <?php
-// Pastikan session aktif dan koneksi database tersedia
-// require_once __DIR__ . '/../../vendor/autoload.php';
-
-// $id_ppk = $_SESSION['user_id'];
-
-// // Cek apakah user adalah PPK
-// $queryCheckPPK = "
-//     SELECT 1 FROM set_pejabat 
-//     WHERE id_user = ? AND id_level = 5
-//     LIMIT 1
-// ";
-// $stmtCheck = $conn->prepare($queryCheckPPK);
-// $stmtCheck->bind_param("i", $id_ppk);
-// $stmtCheck->execute();
-// $resultCheck = $stmtCheck->get_result();
-
-// if ($resultCheck->num_rows === 0) {
-//     die('Akses ditolak: Anda bukan PPK.');
-// }
-
-// Ambil permohonan yang belum ditandatangani PPK
-// $query = "
-//     SELECT p.id, p.nomor_permohonan, p.tanggal_permohonan, p.grand_total_harga,
-//            u.name AS nama_pemohon, s.nama_status, s.deskripsi_status
-//     FROM permohonan p
-//     JOIN users u ON p.user_id = u.id
-//     JOIN status_permohonan s ON p.status2 = s.id_status
-//     WHERE (p.qr_code_ppk IS NULL OR p.qr_code_ppk = '')
-//     ORDER BY p.tanggal_permohonan DESC
-// ";
-
-// $stmt = $conn->prepare($query);
-// $stmt->execute();
-// $requests = $stmt->get_result();
-
 require_once __DIR__ . '/../../vendor/autoload.php';
 
-$id_ppk = $_SESSION['user_id']; // PPK yang sedang login
+$id_katimja = $_SESSION['user_id']; // Katimja yang sedang login
 
 $query = "
     SELECT p.id, p.nomor_permohonan, p.tanggal_permohonan, p.grand_total_harga,
@@ -44,20 +9,15 @@ $query = "
     FROM permohonan p
     JOIN users u ON p.user_id = u.id
     JOIN status_permohonan s ON p.status2 = s.id_status
-    WHERE p.status2 = 1
+    WHERE p.status2 = 0 AND u.atasan_id = ?
     ORDER BY p.tanggal_permohonan DESC
 ";
 
 $stmt = $conn->prepare($query);
+$stmt->bind_param("i", $id_katimja);
 $stmt->execute();
-//$result = $stmt->get_result();
 $requests = $stmt->get_result();
-// while ($row = $requests->fetch_assoc()) {
-//     echo "
-// <pre>";
-//     print_r($row);
-//     echo "</pre>";
-// }
+
 ?>
 
 
@@ -193,7 +153,7 @@ $requests = $stmt->get_result();
                                                 </thead>
                                                 <tbody>
                                                     <?php $no = 1;
-                                                    while ($row = $requests->fetch_assoc()):  ?>
+                                                    while ($row = $requests->fetch_assoc()): ?>
                                                     <tr>
                                                         <td><?= $no++; ?></td>
                                                         <td>
@@ -217,16 +177,15 @@ $requests = $stmt->get_result();
                                                         </td>
 
                                                         <td>
+                                                            <a href="index.php?page=detail_permohonan&id=<?= $row['id']; ?>"
+                                                                class="btn btn-info btn-sm">
+                                                                📑 Detail
+                                                            </a>
                                                             <a href="pages/pejabat2/proses_ttd.php?id_permohonan=<?= $row['id']; ?>"
                                                                 class="btn btn-success btn-sm"
                                                                 onclick="return confirm('Proses tanda tangan sekarang?')">
                                                                 ✍️ Tanda Tangan
                                                             </a>
-                                                            <a href="index.php?page=detail_permohonan&id=<?= $row['id']; ?>"
-                                                                class="btn btn-info btn-sm">
-                                                                📑 xDetail
-                                                            </a>
-
                                                         </td>
 
 
@@ -265,29 +224,8 @@ $requests = $stmt->get_result();
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
-    <!-- <script>
-    $(document).ready(function() {
-        $('#zero_config').DataTable();
-    });
-    </script> -->
     <script>
     $(document).ready(function() {
-        $('#zero_config').DataTable({
-            responsive: true,
-            language: {
-                search: "Cari:",
-                lengthMenu: "Tampilkan _MENU_ entri",
-                info: "Menampilkan _START_ sampai _END_ dari _TOTAL_ entri",
-                paginate: {
-                    first: "Pertama",
-                    last: "Terakhir",
-                    next: "Berikutnya",
-                    previous: "Sebelumnya"
-                },
-                zeroRecords: "Data tidak ditemukan",
-                infoEmpty: "Tidak ada entri yang tersedia",
-                infoFiltered: "(difilter dari total _MAX_ entri)"
-            }
-        });
+        $('#zero_config').DataTable();
     });
     </script>

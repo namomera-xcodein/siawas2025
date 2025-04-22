@@ -323,13 +323,14 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                             </div>
                                             <div class="col-lg-4 col-md-12">
                                                 <div class="text-center">
-                                                    <h5>Plt. Kasubbag Umum / PPK,<br>
-                                                        <br>
-                                                        <br>
+                                                    <h5>Mengetahui,<br>
+                                                        Plt. Kasubbag Umum / PPK,<br>
+
+
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_ppk'])): ?>
-                                                    <img src="<?= htmlspecialchars($permohonan['qr_code_ppk']); ?>"
-                                                        alt="QR Code SPM" width="100">
+                                                    <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_ppk']); ?>"
+                                                        alt="QR Code PPK" width="100">
                                                     <?php else: ?>
                                                     <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
@@ -350,8 +351,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_kpa'])): ?>
-                                                    <img src="<?= htmlspecialchars($permohonan['qr_code_kpa']); ?>"
-                                                        alt="QR Code SPM" width="100"><br>
+                                                    <img src="<?= $base_url ?><?= htmlspecialchars($permohonan['qr_code_kpa']); ?>"
+                                                        alt="QR Code KPA" width="100"><br>
                                                     <?php else: ?>
                                                     <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>

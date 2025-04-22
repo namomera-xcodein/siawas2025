@@ -55,11 +55,18 @@
                     <div class="d-flex d-lg-flex d-md-block align-items-center">
                         <div>
                             <div class="d-inline-flex align-items-center">
-                                <h2 class="text-dark mb-1 font-weight-medium">236</h2>
+                                <h2 class="text-dark mb-1 font-weight-medium">
+                                    <?php
+                                    include 'config/config.php';
+                                    $query = mysqli_query($conn, "SELECT COUNT(*) as total FROM users");
+                                    $data = mysqli_fetch_assoc($query);
+                                    echo $data['total'];
+                                    ?>
+                                </h2>
                                 <span
-                                    class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">+18.33%</span>
+                                    class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">10%</span>
                             </div>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Clients</h6>
+                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total User</h6>
                         </div>
                         <div class="ml-auto mt-md-3 mt-lg-0">
                             <span class="opacity-7 text-muted"><i data-feather="user-plus"></i></span>
@@ -71,12 +78,19 @@
                 <div class="card-body">
                     <div class="d-flex d-lg-flex d-md-block align-items-center">
                         <div>
-                            <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"><sup
-                                    class="set-doller">$</sup>18,306</h2>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Earnings of Month</h6>
+                            <h2 class="text-dark mb-1 w-100 text-truncate font-weight-medium"><sup>Rp. <?php
+                                                                                                        include 'config/config.php';
+                                                                                                        $query = mysqli_query($conn, "SELECT COALESCE(SUM(grand_total_harga), 0) as total FROM permohonan");
+                                                                                                        $data = mysqli_fetch_assoc($query);
+                                                                                                        echo number_format($data['total'], 0, ',', '.');
+                                                                                                        ?></sup></h2>
+                            <h6 class="text-muted text-wrap font-weight-normal mb-0 w-100 text-truncate">Total
+                                Permohonan
+                                Diajukan
+                            </h6>
                         </div>
                         <div class="ml-auto mt-md-3 mt-lg-0">
-                            <span class="opacity-7 text-muted"><i data-feather="dollar-sign"></i></span>
+                            <span class="opacity-7 text-muted"><i data-feather="credit-card"></i></span>
                         </div>
                     </div>
                 </div>
@@ -86,14 +100,19 @@
                     <div class="d-flex d-lg-flex d-md-block align-items-center">
                         <div>
                             <div class="d-inline-flex align-items-center">
-                                <h2 class="text-dark mb-1 font-weight-medium">1538</h2>
+                                <h2 class="text-dark mb-1 font-weight-medium">Rp. <?php
+                                                                                    include 'config/config.php';
+                                                                                    $query = mysqli_query($conn, "SELECT COALESCE(SUM(grand_total_harga), 0) as total FROM permohonan WHERE status2 = 8");
+                                                                                    $data = mysqli_fetch_assoc($query);
+                                                                                    echo number_format($data['total'], 0, ',', '.');
+                                                                                    ?></h2>
                                 <span
-                                    class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">-18.33%</span>
+                                    class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block"></span>
                             </div>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">New Projects</h6>
+                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Realisasi</h6>
                         </div>
                         <div class="ml-auto mt-md-3 mt-lg-0">
-                            <span class="opacity-7 text-muted"><i data-feather="file-plus"></i></span>
+                            <span class="opacity-7 text-muted"><i data-feather="credit-card"></i></span>
                         </div>
                     </div>
                 </div>
@@ -102,11 +121,16 @@
                 <div class="card-body">
                     <div class="d-flex d-lg-flex d-md-block align-items-center">
                         <div>
-                            <h2 class="text-dark mb-1 font-weight-medium">864</h2>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Projects</h6>
+                            <h2 class="text-dark mb-1 font-weight-medium"><?php
+                                                                            include 'config/config.php';
+                                                                            $query = mysqli_query($conn, "SELECT COUNT(*) as total FROM permohonan");
+                                                                            $data = mysqli_fetch_assoc($query);
+                                                                            echo $data['total'];
+                                                                            ?></h2>
+                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Permohonan</h6>
                         </div>
                         <div class="ml-auto mt-md-3 mt-lg-0">
-                            <span class="opacity-7 text-muted"><i data-feather="globe"></i></span>
+                            <span class="opacity-7 text-muted"><i data-feather="file"></i></span>
                         </div>
                     </div>
                 </div>
@@ -119,108 +143,121 @@
         <!-- Start Sales Charts Section -->
         <!-- *************************************************************** -->
         <div class="row">
-            <div class="col-lg-4 col-md-12">
+            <div class="col-lg-6 col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Total Sales</h4>
+                        <h4 class="card-title">Total Penggunaan Anggaran</h4>
                         <div id="campaign-v2" class="mt-2" style="height: 283px; width: 100%"></div>
                         <ul class="list-style-none mb-0">
                             <li>
                                 <i class="fas fa-circle text-primary font-10 mr-2"></i>
-                                <span class="text-muted">Direct Sales</span>
-                                <span class="text-dark float-right font-weight-medium">$2346</span>
+                                <span class="text-muted">Pengajuan</span>
+                                <span class="text-dark float-right font-weight-medium">Rp. <?php
+                                                                                            include 'config/config.php';
+                                                                                            $query = mysqli_query($conn, "SELECT COALESCE(SUM(grand_total_harga), 0) as total FROM permohonan");
+                                                                                            $data = mysqli_fetch_assoc($query);
+                                                                                            echo number_format($data['total'], 0, ',', '.');
+                                                                                            ?></span>
                             </li>
                             <li class="mt-3">
                                 <i class="fas fa-circle text-danger font-10 mr-2"></i>
-                                <span class="text-muted">Referral Sales</span>
-                                <span class="text-dark float-right font-weight-medium">$2108</span>
+                                <span class="text-muted">Realisasi</span>
+                                <span class="text-dark float-right font-weight-medium">Rp. <?php
+                                                                                            include 'config/config.php';
+                                                                                            $query = mysqli_query($conn, "SELECT COALESCE(SUM(grand_total_harga), 0) as total FROM permohonan WHERE status2 = 8");
+                                                                                            $data = mysqli_fetch_assoc($query);
+                                                                                            echo number_format($data['total'], 0, ',', '.');
+                                                                                            ?></span>
                             </li>
                             <li class="mt-3">
                                 <i class="fas fa-circle text-cyan font-10 mr-2"></i>
-                                <span class="text-muted">Affiliate Sales</span>
-                                <span class="text-dark float-right font-weight-medium">$1204</span>
+                                <span class="text-muted">Proses</span>
+                                <span class="text-dark float-right font-weight-medium">Rp. <?php
+                                                                                            include 'config/config.php';
+                                                                                            $query = mysqli_query($conn, "SELECT COALESCE(SUM(grand_total_harga), 0) as total FROM permohonan WHERE status2 != 8");
+                                                                                            $data = mysqli_fetch_assoc($query);
+                                                                                            echo number_format($data['total'], 0, ',', '.');
+                                                                                            ?></span>
                             </li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12">
+            <div class="col-lg-6 col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Net Income</h4>
-                        <div class="net-income mt-4 position-relative" style="height: 294px"></div>
+                        <h4 class="card-title">Pengeluaran Bulanan</h4>
+                        <div id="monthly-chart" style="height: 294px"></div>
+                        <?php
+                        include 'config/config.php';
+                        $query = mysqli_query($conn, "SELECT MONTH(tanggal_permohonan) as bulan, COALESCE(SUM(grand_total_harga), 0) as total 
+                                                    FROM (
+                                                        SELECT 1 as bulan UNION SELECT 2 UNION SELECT 3 UNION SELECT 4 
+                                                        UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8 
+                                                        UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
+                                                    ) months 
+                                                    LEFT JOIN permohonan ON MONTH(tanggal_permohonan) = months.bulan 
+                                                    AND status2 = 8
+                                                    GROUP BY months.bulan 
+                                                    ORDER BY months.bulan");
+                        $data_bulan = array();
+                        $data_total = array();
+                        while ($row = mysqli_fetch_assoc($query)) {
+                            $nama_bulan = date('F', mktime(0, 0, 0, $row['bulan'], 1));
+                            $data_bulan[] = $nama_bulan;
+                            $data_total[] = (float)$row['total'];
+                        }
+                        ?>
+                        <script>
+                        $(function() {
+                            var options = {
+                                series: [{
+                                    name: 'Total Pengeluaran',
+                                    data: <?php echo json_encode($data_total); ?>
+                                }],
+                                chart: {
+                                    type: 'bar',
+                                    height: 294
+                                },
+                                plotOptions: {
+                                    bar: {
+                                        horizontal: false,
+                                        columnWidth: '55%',
+                                        endingShape: 'rounded'
+                                    },
+                                },
+                                dataLabels: {
+                                    enabled: false
+                                },
+                                xaxis: {
+                                    categories: <?php echo json_encode($data_bulan); ?>
+                                },
+                                yaxis: {
+                                    labels: {
+                                        formatter: function(value) {
+                                            return "Rp " + new Intl.NumberFormat('id-ID').format(value);
+                                        }
+                                    }
+                                },
+                                tooltip: {
+                                    y: {
+                                        formatter: function(value) {
+                                            return "Rp " + new Intl.NumberFormat('id-ID').format(value);
+                                        }
+                                    }
+                                }
+                            };
+                            var chart = new ApexCharts(document.querySelector("#monthly-chart"), options);
+                            chart.render();
+                        });
+                        </script>
                         <ul class="list-inline text-center mt-5 mb-2">
-                            <li class="list-inline-item text-muted font-italic">Sales for this month</li>
+                            <li class="list-inline-item text-muted font-italic">Total Pengeluaran per Bulan</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-4 col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <h4 class="card-title mb-4">Earning by Location</h4>
-                        <div class="" style="height: 180px">
-                            <div id="visitbylocate" style="height: 100%"></div>
-                        </div>
-                        <div class="row mb-3 align-items-center mt-1 mt-5">
-                            <div class="col-4 text-right">
-                                <span class="text-muted font-14">India</span>
-                            </div>
-                            <div class="col-5">
-                                <div class="progress" style="height: 5px">
-                                    <div class="progress-bar bg-primary" role="progressbar" style="width: 100%"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="col-3 text-right">
-                                <span class="mb-0 font-14 text-dark font-weight-medium">28%</span>
-                            </div>
-                        </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-4 text-right">
-                                <span class="text-muted font-14">UK</span>
-                            </div>
-                            <div class="col-5">
-                                <div class="progress" style="height: 5px">
-                                    <div class="progress-bar bg-danger" role="progressbar" style="width: 74%"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="col-3 text-right">
-                                <span class="mb-0 font-14 text-dark font-weight-medium">21%</span>
-                            </div>
-                        </div>
-                        <div class="row mb-3 align-items-center">
-                            <div class="col-4 text-right">
-                                <span class="text-muted font-14">USA</span>
-                            </div>
-                            <div class="col-5">
-                                <div class="progress" style="height: 5px">
-                                    <div class="progress-bar bg-cyan" role="progressbar" style="width: 60%"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="col-3 text-right">
-                                <span class="mb-0 font-14 text-dark font-weight-medium">18%</span>
-                            </div>
-                        </div>
-                        <div class="row align-items-center">
-                            <div class="col-4 text-right">
-                                <span class="text-muted font-14">China</span>
-                            </div>
-                            <div class="col-5">
-                                <div class="progress" style="height: 5px">
-                                    <div class="progress-bar bg-success" role="progressbar" style="width: 50%"
-                                        aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="col-3 text-right">
-                                <span class="mb-0 font-14 text-dark font-weight-medium">12%</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
         </div>
         <!-- *************************************************************** -->
         <!-- End Sales Charts Section -->
@@ -486,3 +523,37 @@
         <!-- End Top Leader Table -->
         <!-- *************************************************************** -->
     </div>
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="../assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <!-- apps -->
+    <script src="../dist/js/app-style-switcher.js"></script>
+    <script src="../dist/js/feather.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <!-- themejs -->
+    <!--Menu sidebar -->
+    <script src="../dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../dist/js/custom.min.js"></script>
+    <!--This page plugins -->
+    <script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../dist/js/pages/datatable/datatable-basic.init.js"></script>
+    </body>
+    <script>
+    $(function() {
+        $('[data-toggle="popover"]').popover({
+            trigger: 'hover',
+            html: true
+        });
+    });
+    </script>
+
+
+    </html>

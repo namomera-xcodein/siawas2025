@@ -37,21 +37,21 @@ $user = $result->fetch_assoc();
         <div class="page-breadcrumb">
             <div class="row">
                 <div class="col-7 align-self-center">
-                    <h3 class="page-title text-truncate text-dark font-weight-medium mb-1">
-                        <?php 
+                    <h5 class="page-title text-truncate text-dark font-weight-medium mb-1">
+                        <?php
                         $time = date('H');
                         if ($time >= 5 && $time <= 11) {
-                            echo "Selamat Pagi";
+                            echo "Selamat Pagi, ";
                         } elseif ($time >= 12 && $time <= 15) {
-                            echo "Selamat Siang";
+                            echo "Selamat Siang, ";
                         } elseif ($time >= 16 && $time <= 18) {
-                            echo "Selamat Sore";
+                            echo "Selamat Sore, ";
                         } else {
-                            echo "Selamat Malam";
+                            echo "Selamat Malam, ";
                         }
-                        echo " " . $_SESSION['name'] . "! Anda Login sebagai " . $_SESSION['role'];
-                    ?>
-                    </h3>
+                        echo " " . $_SESSION['name'] . "<br> Anda Login sebagai : " . $_SESSION['level_jabatan'] . "<br>NIP Anda : " . $_SESSION['nip_nik'];
+                        ?>
+                    </h5>
                 </div>
             </div>
         </div>
@@ -78,12 +78,12 @@ $user = $result->fetch_assoc();
                                 </div>
                                 <div class="mb-3">
                                     <label for="nip_nik" class="form-label">Atasan</label>
-                                    <input type="nip_nik" class="form-control" id="atasan_id" name="atasan_id" value="<?php 
-                                                                        $sql_atasan = "SELECT name, jabatan FROM users WHERE id = " . $user['atasan_id'];
-                                                                        $result_atasan = $conn->query($sql_atasan);
-                                                                        $atasan = $result_atasan->fetch_assoc();
-                                                                        echo $atasan['name'] . ' - ' . $atasan['jabatan']; 
-                                                                    ?>" required readonly>
+                                    <input type="nip_nik" class="form-control" id="atasan_id" name="atasan_id" value="<?php
+                                                                                                                        $sql_atasan = "SELECT name, jabatan FROM users WHERE id = " . $user['atasan_id'];
+                                                                                                                        $result_atasan = $conn->query($sql_atasan);
+                                                                                                                        $atasan = $result_atasan->fetch_assoc();
+                                                                                                                        echo $atasan['name'] . ' - ' . $atasan['jabatan'];
+                                                                                                                        ?>" required readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="jabatan" class="form-label">Jabatan</label>

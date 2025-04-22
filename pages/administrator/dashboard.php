@@ -109,11 +109,12 @@ if ($result->num_rows > 0) {
                     <div class="d-flex d-lg-flex d-md-block align-items-center">
                         <div>
                             <div class="d-inline-flex align-items-center">
-                                <h2 class="text-dark mb-1 font-weight-medium"><?php
-                                                                                $query = mysqli_query($conn, "SELECT COUNT(*) as total FROM users");
-                                                                                $data = mysqli_fetch_assoc($query);
-                                                                                echo $data['total'];
-                                                                                ?></h2>
+                                <h2 class="text-dark mb-1 font-weight-medium">
+                                    <?php
+                                    $query = mysqli_query($conn, "SELECT COUNT(*) as total FROM users");
+                                    $data = mysqli_fetch_assoc($query);
+                                    echo $data['total'];
+                                    ?></h2>
                                 <span
                                     class="badge bg-primary font-12 text-white font-weight-medium badge-pill ml-2 d-lg-block d-md-none">
                                     <?php
@@ -140,9 +141,9 @@ if ($result->num_rows > 0) {
                                     class="set-doller">Rp.</sup><?php
                                                                 $query = mysqli_query($conn, "SELECT SUM(grand_total_harga) as total FROM permohonan");
                                                                 $data = mysqli_fetch_assoc($query);
-                                                                echo number_format($data['total']);
+                                                                echo number_format($data['total'] ?? 0);
                                                                 ?></h2>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Nilai Belanja</h6>
+                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Pengeluaran</h6>
                         </div>
                         <div class="ml-auto mt-md-3 mt-lg-0">
                             <span class="opacity-7 text-muted"><i data-feather="dollar-sign"></i></span>
@@ -164,7 +165,7 @@ if ($result->num_rows > 0) {
                                 <!-- <span
                                     class="badge bg-danger font-12 text-white font-weight-medium badge-pill ml-2 d-md-none d-lg-block">-18.33%</span> -->
                             </div>
-                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Permohonan</h6>
+                            <h6 class="text-muted font-weight-normal mb-0 w-100 text-truncate">Total Permohonan</h6>
                         </div>
                         <div class="ml-auto mt-md-3 mt-lg-0">
                             <span class="opacity-7 text-muted"><i data-feather="file-plus"></i></span>
@@ -398,15 +399,18 @@ if ($result->num_rows > 0) {
                                             <th>Tanggal Permohonan</th>
                                             <th>Nomor Permohonan</th>
                                             <th>Nama Pemohon</th>
+                                            <th>Total Harga</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <?php
-                                        $query = "SELECT p.id, p.nomor_permohonan, p.tanggal_permohonan, p.grand_total_harga, p.status2, u.name AS nama_pemohon
+
+                                        $query = "SELECT p.id, p.nomor_permohonan, p.tanggal_permohonan, p.grand_total_harga, sp.nama_status as status2, u.name AS nama_pemohon
                                         FROM permohonan p
                                         JOIN users u ON p.user_id = u.id
+                                        JOIN status_permohonan sp ON p.status2 = sp.id_status
                                         ORDER BY p.created_at DESC
                                         LIMIT 5";
 
@@ -416,20 +420,23 @@ if ($result->num_rows > 0) {
 
                                         $no = 1;
                                         while ($row = mysqli_fetch_assoc($result)) { ?>
-                                        <tr>
-                                            <td><?= $no++; ?></td>
-                                            <td><?= date('d F Y H:i:s', strtotime($row['tanggal_permohonan'])); ?>
-                                            </td>
-                                            <td><?= htmlspecialchars($row['nomor_permohonan']); ?></td>
-                                            <td><?= htmlspecialchars($row['nama_pemohon']); ?></td>
-                                            <td><?= htmlspecialchars($row['status2']); ?></td>
-                                            <td>
-                                                <a href="index.php?page=detail_permohonan&id=<?= $row['id']; ?>"
-                                                    class="btn btn-info btn-sm">
-                                                    📑 Detail
-                                                </a>
-                                            </td>
-                                        </tr>
+                                            <tr>
+                                                <td><?= $no++; ?></td>
+                                                <td><?= date('d F Y H:i:s', strtotime($row['tanggal_permohonan'])); ?>
+                                                </td>
+                                                <td><?= htmlspecialchars($row['nomor_permohonan']); ?></td>
+                                                <td><?= htmlspecialchars($row['nama_pemohon']); ?></td>
+                                                <td>Rp.
+                                                    <?= number_format(htmlspecialchars($row['grand_total_harga']), 0, ',', '.'); ?>
+                                                </td>
+                                                <td><?= htmlspecialchars($row['status2']); ?></td>
+                                                <td>
+                                                    <a href="index.php?page=detail_permohonan&id=<?= $row['id']; ?>"
+                                                        class="btn btn-info btn-sm">
+                                                        📑 Detail
+                                                    </a>
+                                                </td>
+                                            </tr>
                                         <?php } ?>
                                     </tbody>
                                     <tfoot>
@@ -438,6 +445,7 @@ if ($result->num_rows > 0) {
                                             <th>Tanggal Permohonan</th>
                                             <th>Nomor Permohonan</th>
                                             <th>Nama Pemohon</th>
+                                            <th>Total Harga</th>
                                             <th>Status</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -453,3 +461,37 @@ if ($result->num_rows > 0) {
         <!-- End Top Leader Table -->
         <!-- *************************************************************** -->
     </div>
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="../assets/libs/jquery/dist/jquery.min.js"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="../assets/libs/popper.js/dist/umd/popper.min.js"></script>
+    <script src="../assets/libs/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- apps -->
+    <!-- apps -->
+    <script src="../dist/js/app-style-switcher.js"></script>
+    <script src="../dist/js/feather.min.js"></script>
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="../assets/libs/perfect-scrollbar/dist/perfect-scrollbar.jquery.min.js"></script>
+    <script src="../assets/extra-libs/sparkline/sparkline.js"></script>
+    <!--Wave Effects -->
+    <!-- themejs -->
+    <!--Menu sidebar -->
+    <script src="../dist/js/sidebarmenu.js"></script>
+    <!--Custom JavaScript -->
+    <script src="../dist/js/custom.min.js"></script>
+    <!--This page plugins -->
+    <script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
+    <script src="../dist/js/pages/datatable/datatable-basic.init.js"></script>
+    </body>
+    <script>
+        $(function() {
+            $('[data-toggle="popover"]').popover({
+                trigger: 'hover',
+                html: true
+            });
+        });
+    </script>
+
+
+    </html>

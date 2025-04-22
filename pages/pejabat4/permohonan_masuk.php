@@ -1,9 +1,15 @@
 <?php
 
+// Panggil autoload dan mulai session
 require_once __DIR__ . '/../../vendor/autoload.php';
+
+if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (isset($_SESSION['success'])) {
     echo '<div class="alert alert-success">' . $_SESSION['success'] . '</div>';
-    unset($_SESSION['success']); // Hapus notifikasi setelah ditampilkan
+    unset($_SESSION['success']);
 }
 
 if (isset($_SESSION['error'])) {
@@ -11,8 +17,20 @@ if (isset($_SESSION['error'])) {
     unset($_SESSION['error']);
 }
 
-$id_ppk = $_SESSION['user_id']; // PPK yang sedang login
+$id_kpa = $_SESSION['user_id'] ?? null;
+$level_user = $_SESSION['level_user'] ?? null;
 
+echo "<pre>";
+var_dump($level_user);
+echo "</pre>";
+
+// Jika bukan KPA (level 4), tolak akses
+if ($level_user != 4) {
+    echo "<script>alert('Kamu bukan KPA! Level saat ini: $level_user');</script>";
+    exit();
+}
+
+// Query untuk menampilkan permohonan yang menunggu persetujuan KPA
 $query = "
     SELECT p.id, p.nomor_permohonan, p.tanggal_permohonan, p.grand_total_harga,
            u.name AS nama_pemohon, s.nama_status, s.deskripsi_status
@@ -25,15 +43,9 @@ $query = "
 
 $stmt = $conn->prepare($query);
 $stmt->execute();
-//$result = $stmt->get_result();
 $requests = $stmt->get_result();
-// while ($row = $requests->fetch_assoc()) {
-//     echo "
-// <pre>";
-//     print_r($row);
-//     echo "</pre>";
-// }
 ?>
+
 
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
@@ -116,7 +128,7 @@ $requests = $stmt->get_result();
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb m-0 p-0">
                                     <li class="breadcrumb-item"><a href="#" class="text-muted">Admin
-                                            Dashboard</a></li>
+                                            Dashboard</a><br></li>
                                     <li class="breadcrumb-item text-muted active" aria-current="page">all permohonan
                                     </li>
                                 </ol>
@@ -125,12 +137,9 @@ $requests = $stmt->get_result();
                     </div>
                     <div class="col-5 align-self-center">
                         <div class="customize-input float-right">
-                            <!-- <select
-                                class="custom-select custom-select-set form-control bg-white border-0 custom-shadow custom-radius">
-                                <option selected>Aug 19</option>
-                                <option value="1">July 19</option>
-                                <option value="2">Jun 19</option>
-                            </select> -->
+                            <div class="user-level">
+                                Login sebagai: <?php echo $_SESSION['level_user']; ?>
+                            </div>
                         </div>
                     </div>
                 </div>

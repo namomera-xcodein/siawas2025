@@ -1,3 +1,32 @@
+hitung prosentase jumlah permohonan dengan jumlah yang sudah berhasil
+<?php
+$query1 = mysqli_query($conn, "SELECT COUNT(*) as total FROM permohonan");
+$query2 = mysqli_query($conn, "SELECT COUNT(*) as selesai FROM permohonan WHERE status2 = 8");
+$total = mysqli_fetch_assoc($query1)['total'];
+$selesai = mysqli_fetch_assoc($query2)['selesai'];
+$persentase = ($total > 0) ? ($selesai / $total) * 100 : 0;
+echo number_format($persentase, 2) . '%';
+?>
+
+# Cegah eksekusi file PHP di folder ini
+<FilesMatch "\.(php|php5|phtml)$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Izinkan akses ke file tertentu seperti gambar, PDF, dan dokumen
+<FilesMatch "\.(jpg|jpeg|png|gif|pdf|doc|docx)$">
+    Order Allow,Deny
+    Allow from all
+</FilesMatch>
+
+# Cegah directory listing
+Options -Indexes
+ini file ht acces cegah injek
+📌 Simpan dengan nama .htaccess di:
+/uploads/.htaccess
+
+
 menu admin sselesai
 lanjut ke bagian permohonan pemohon
 

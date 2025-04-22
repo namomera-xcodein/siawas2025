@@ -1,13 +1,12 @@
 <?php
 //session_start();
-//include '../config/config.php';
-
+//include '../../config/config.php';
+//var_dump($mysqli);
 // Pastikan user sudah login
 if (!isset($_SESSION['user_id'])) {
     header('Location: ../auth/login.php');
     exit;
 }
-
 
 
 // Dapatkan ID permohonan dari URL
@@ -127,8 +126,16 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             <!-- ============================================================== -->
             <div class="page-breadcrumb">
                 <div class="row">
+                    <div class="col-12 align-self-center">
+                        <a href="index.php?page=all_permohonan" class="btn btn-danger"><i class="fas fa-arrow-left"></i>
+                            Kembali</a>
+                        <br>
+                    </div>
+                    <div class="col-12 align-self-center"><br></div>
+
                     <div class="col-7 align-self-center">
-                        <h4 class="page-title text-truncate text-dark font-weight-medium mb-1">Detail Permohonan</h4>
+                        <h4 class="page-title text-truncate text-dark font-weight-medium mb-1">Detail Permohonan
+                        </h4><?php echo "Level Anda: " . $_SESSION['level_user']; ?>
                         <div class="d-flex align-items-center">
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb m-0 p-0">
@@ -170,47 +177,97 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                     <!-- Column -->
 
                                 </div>
+                                <?php
+                                // Level saat ini dari permohonan
+                                $level = $permohonan['status2']; // asumsi status_id disimpan di kolom ini
+
+                                // Level yang dihitung untuk progress
+                                $progress_levels = [0, 1, 2, 3, 6, 7, 8];
+                                $total_steps = count($progress_levels); // 7
+                                $progress_percent = 0;
+
+                                // Hitung progres hanya jika level termasuk dalam progress_levels
+                                if (in_array($level, $progress_levels)) {
+                                    $current_index = array_search($level, $progress_levels); // indeks ke-nya dalam array progress
+                                    $progress_percent = round((($current_index + 1) / $total_steps) * 100);
+                                }
+
+                                // Label status (opsional)
+                                $status_labels = [
+                                    0 => 'Diajukan',
+                                    1 => 'Disetujui oleh KATIMJA',
+                                    2 => 'Disetujui Pejabat Kasubbag Umum / PPK',
+                                    3 => 'Disetujui Pejabat KPA',
+                                    4 => 'Ditolak',
+                                    5 => 'Revisi',
+                                    6 => 'Menunggu Pencairan',
+                                    7 => 'Proses Belanja',
+                                    8 => 'Selesai'
+                                ];
+                                ?>
                                 <div class="table-responsive">
                                     <div class="progress mt-4">
-                                        <div class="progress-bar progress-bar-striped progress-bar-animated"
-                                            role="progressbar" aria-valuenow="
-                                            <?php
-                                            if ($permohonan['status'] == 'Menunggu Persetujuan SPM') {
-                                                echo '50';
-                                            } else if ($permohonan['status'] == 'Menunggu Persetujuan Plt.Kasubbag Umum / PPK') {
-                                                echo '75';
-                                            } else if ($permohonan['status'] == 'Menunggu Persetujuan KPA') {
-                                                echo '100';
-                                            }
-                                            ?>" aria-valuemin="0" aria-valuemax="100" style="width: 
-                                            <?php
-                                            if ($permohonan['status'] == 'Menunggu Persetujuan SPM') {
-                                                echo '50%';
-                                            } else if ($permohonan['status'] == 'Menunggu Persetujuan Plt.Kasubbag Umum / PPK') {
-                                                echo '75%';
-                                            } else if ($permohonan['status'] == 'Menunggu Persetujuan KPA') {
-                                                echo '100%';
-                                            }
-                                            ?>">
-
+                                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-success"
+                                            role="progressbar" aria-valuenow="<?= $progress_percent ?>"
+                                            aria-valuemin="0" aria-valuemax="100"
+                                            style="width: <?= $progress_percent ?>%;">
                                         </div>
-                                        <p>"Proses Permohonan
-                                            <?php
-                                            if ($permohonan['status'] == 'Menunggu Persetujuan SPM') {
-                                                echo '50%';
-                                            } else if ($permohonan['status'] == 'Menunggu Persetujuan Plt.Kasubbag Umum / PPK') {
-                                                echo '75%';
-                                            } else if ($permohonan['status'] == 'Menunggu Persetujuan KPA') {
-                                                echo '100%';
-                                            }
-                                            ?>"
-                                        </p>
                                     </div>
+                                    <p class="mt-2">
+                                        Proses Permohonan: <strong><?= $progress_percent ?>%</strong> —
+                                        <em>Status: <?= $status_labels[$level] ?? 'Tidak Diketahui' ?> </em>
+                                    </p>
+                                    <!-- Tombol untuk mengubah status -->
+                                    <?php if ($_SESSION['level_user'] == 6): ?>
+                                    <div class="mt-3">
+                                        <form method="POST" class="d-inline">
+                                            <input type="hidden" name="update_status" value="8">
+                                            <input type="hidden" name="id_permohonan"
+                                                value="<?= htmlspecialchars($permohonan['id']); ?>">
+                                            <button type="submit" class="btn btn-warning me-2">Selesai</button>
+                                        </form>
+                                        <!-- <form method="POST" class="d-inline">
+                                            <input type="hidden" name="update_status" value="7">
+                                            <input type="hidden" name="id_permohonan"
+                                                value="<?= htmlspecialchars($permohonan['id']); ?>">
+                                            <button type="submit" class="btn btn-info">Proses Belanja</button>
+                                        </form> -->
+                                    </div>
+                                    <?php endif; ?>
+
+                                    <?php
+                                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_status'])) {
+                                        if ($_SESSION['level_user'] == 6) {
+                                            $id_permohonan = isset($_POST['id_permohonan']) ? intval($_POST['id_permohonan']) : 0;
+                                            $new_status = isset($_POST['update_status']) ? intval($_POST['update_status']) : 0;
+
+                                            // Update status di database
+                                            $query = "UPDATE permohonan SET status2 = ? WHERE id = ?";
+                                            $stmt = $conn->prepare($query);
+                                            $stmt->bind_param("ii", $new_status, $id_permohonan);
+
+                                            if ($stmt->execute()) {
+                                                echo "<script>
+                    alert('Status berhasil diperbarui!');
+                    window.location.href = window.location.href;
+                  </script>";
+                                            } else {
+                                                echo "<script>alert('Gagal memperbarui status!');</script>";
+                                            }
+                                            $stmt->close();
+                                        }
+                                    }
+                                    ?>
+
+
+
                                     <div class="row">
                                         <div class="col-12">
                                             <!-- <h4 class="mb-0">Detail Permohonan</h4> -->
                                             <div class="card">
                                                 <div class="card-body collapse show">
+
+
 
 
 
@@ -226,14 +283,89 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                     <h5 class="card-title">Detail Permohonan
                                         : <?= htmlspecialchars($permohonan['nomor_permohonan']); ?>
                                     </h5>
-                                    <h5 class="card-title">Mata Anggaran
+                                    <!-- <h5 class="card-title">Mata Anggaran
                                         : <?= htmlspecialchars($permohonan['mata_anggaran']); ?>
+                                    </h5> -->
+                                    <h5 class="card-title">
+                                        Mata Anggaran:
+                                        <?php if ($_SESSION['level_user'] == 3): ?>
+                                        <form method="POST" class="d-flex align-items-center mt-2">
+                                            <input type="hidden" name="update_mata_anggaran" value="1">
+                                            <input type="hidden" name="id_permohonan"
+                                                value="<?= htmlspecialchars($permohonan['id']); ?>">
+                                            <input type="text" name="mata_anggaran"
+                                                value="<?= htmlspecialchars($permohonan['mata_anggaran']); ?>"
+                                                class="form-control form-control-sm me-2" style="width: 250px;"
+                                                placeholder="Input nama / kode Mata Anggaran" required>
+                                            <button type="submit" class="btn btn-sm btn-primary">
+                                                <?= empty($permohonan['mata_anggaran']) ? 'Tambahkan' : 'Edit'; ?>
+                                            </button>
+                                        </form>
+                                        <?php else: ?>
+                                        <?= htmlspecialchars($permohonan['mata_anggaran']); ?>
+                                        <?php endif; ?>
                                     </h5>
+
+                                    <?php
+                                    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_mata_anggaran'])) {
+                                        if ($_SESSION['level_user'] == 3) {
+                                            $id_permohonan = isset($_POST['id_permohonan']) ? intval($_POST['id_permohonan']) : 0;
+                                            $mata_anggaran = trim($_POST['mata_anggaran'] ?? '');
+
+                                            if ($id_permohonan > 0 && !empty($mata_anggaran)) {
+                                                $mata_anggaran = mysqli_real_escape_string($conn, $mata_anggaran);
+
+                                                $query = "UPDATE permohonan SET mata_anggaran = '$mata_anggaran', updated_at = NOW() WHERE id = $id_permohonan";
+
+                                                if (mysqli_query($conn, $query)) {
+                                                    echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Mata anggaran berhasil diperbarui.',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        window.location.href = 'index.php?page=detail_permohonan&id=$id_permohonan';
+                    });
+                });
+                </script>";
+                                                } else {
+                                                    echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+                <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Gagal!',
+                        text: 'Gagal memperbarui mata anggaran.'
+                    });
+                });
+                </script>";
+                                                }
+                                            } else {
+                                                echo "<script src='https://cdn.jsdelivr.net/npm/sweetalert2@11'></script>
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Input tidak valid!',
+                    text: 'Silakan isi data dengan benar.'
+                });
+            });
+            </script>";
+                                            }
+                                        }
+                                    }
+                                    ?>
+
+
 
                                     <h5 class="card-title"><strong>Tanggal Permohonan:</strong>
                                         <?= date('d F Y', strtotime($permohonan['tanggal_permohonan'])); ?></h4>
                                         <h5 class="card-title"><strong>Total Harga:</strong> Rp.
-                                            <?= number_format($permohonan['grand_total_harga'], 0, ',', '.'); ?></h5>
+                                            <?= number_format($permohonan['grand_total_harga'], 0, ',', '.'); ?>
+                                        </h5>
                                         <h5 class="card-title">Detail Barang:</h5>
                                         <!-- NEW Table -->
                                         <table class="table table-striped table-bordered">
@@ -254,7 +386,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                                     <td><?= $no++; ?></td>
                                                     <td><?= htmlspecialchars($barang['nama_barang']); ?></td>
                                                     <td><?= htmlspecialchars($barang['satuan']); ?></td>
-                                                    <td>Rp. <?= number_format($barang['harga_satuan'], 0, ',', '.'); ?>
+                                                    <td>Rp.
+                                                        <?= number_format($barang['harga_satuan'], 0, ',', '.'); ?>
                                                     </td>
                                                     <td><?= $barang['jumlah_barang']; ?></td>
                                                     <td>Rp.
@@ -308,7 +441,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_pejabat1'])): ?>
                                                     <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_pejabat1']); ?>"
-                                                        alt="QR Code SPM" width="100">
+                                                        alt="QR Code Katimja" width="100">
                                                     <?php else: ?>
                                                     <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
@@ -322,14 +455,13 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
                                             </div>
                                             <div class="col-lg-4 col-md-12">
-                                                <div class="text-center">
+                                                <div class="text-center">Mengetahui,<br>
                                                     <h5>Plt. Kasubbag Umum / PPK,<br>
-                                                        <br>
-                                                        <br>
+
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_ppk'])): ?>
-                                                    <img src="<?= htmlspecialchars($permohonan['qr_code_ppk']); ?>"
-                                                        alt="QR Code SPM" width="100">
+                                                    <img src="<?= $base_url ?><?= htmlspecialchars($permohonan['qr_code_ppk']); ?>"
+                                                        alt="QR Code PPK" width="100">
                                                     <?php else: ?>
                                                     <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
@@ -350,8 +482,8 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
 
                                                     </h5>
                                                     <?php if (!empty($permohonan['qr_code_kpa'])): ?>
-                                                    <img src="<?= htmlspecialchars($permohonan['qr_code_kpa']); ?>"
-                                                        alt="QR Code SPM" width="100"><br>
+                                                    <img src="<?= $base_url ?>/<?= htmlspecialchars($permohonan['qr_code_kpa']); ?>"
+                                                        alt="QR Code KPA" width="100"><br>
                                                     <?php else: ?>
                                                     <div class="card-title">Menunggu Persetujuan</div>
                                                     <?php endif; ?>
@@ -372,14 +504,14 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                             </div>
                         </div>
                     </div>
-                    <!--  -->
-                    <div class="form-actions alert-danger">
+                    <!--  button asli disini -->
+                    <!-- <div class="form-actions alert-danger">
                         <div class="text-right">
-                            <!-- <button type="submit" class="btn btn-info" id="addItem">Tambah</button> -->
+                             <button type="submit" class="btn btn-info" id="addItem">Tambah</button>
                             <button onclick="window.print()" class="btn btn-danger">Cetak</button>
                             <a href="index.php?page=all_permohonan" class="btn btn-primary">Kembali</a>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <!-- ============================================================== -->
@@ -387,10 +519,90 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
             <!-- ============================================================== -->
             <!-- ============================================================== -->
 
+            <!-- ============================================================== -->
+            <div class="card-group">
+                <div class="card border-right">
+                    <div class="card-body">
+                        <div class="d-flex d-lg-flex d-md-block align-items-center">
+                            <h4 class="card-title">Data Bukti Pembelian :</h4>
+                            <div class="ml-auto mt-md-3 mt-lg-0">
+                                <span class="opacity-7 text-muted"><i data-feather="file-text"></i></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- SweetAlert & Icon CDN -->
+                        <link rel="stylesheet"
+                            href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css">
+
+                        <!-- <h5 class="card-title">Lampiran :</h5> -->
+
+                        <?php
+                        // Ambil data permohonan sekarang
+                        $sql = "SELECT bukti_nota_pdf, foto_geotagging, dokumen_pendukung, keterangan_bukti FROM permohonan WHERE id = $id_permohonan";
+                        $result = mysqli_query($conn, $sql);
+                        $data = mysqli_fetch_assoc($result);
+                        ?>
+
+                        <div class="form-group">
+                            <label>Bukti Nota (PDF) : </label>
+                            <?php if (!empty($data['bukti_nota_pdf'])): ?>
+                            <a href="<?= $base_url ?>/uploads/nota/<?= $data['bukti_nota_pdf'] ?>" target="_blank">
+                                ✅ <i class="fa fa-file-pdf"></i> Preview
+                            </a><br>
+                            <?php else: ?>
+                            <b>Belum ada file yang diupload</b>
+                            <?php endif; ?>
+                            <!-- <input type="file" name="bukti_nota_pdf" class="form-control"> -->
+                        </div>
+
+                        <div class="form-group">
+                            <label>Foto Geotagging : </label>
+                            <?php if (!empty($data['foto_geotagging'])): ?>
+                            <a href="<?= $base_url ?>/uploads/foto/<?= $data['foto_geotagging'] ?>" target="_blank">
+                                ✅ <i class="fa fa-file-image"></i> Preview
+                            </a><br>
+                            <?php else: ?>
+                            <b>Belum ada file yang diupload</b>
+                            <?php endif; ?>
+                            <!-- <input type="file" name="foto_geotagging" class="form-control"> -->
+                        </div>
+                        <div class="form-group">
+                            <label>Dokumen Pendukung (PDF/DOC) : </label>
+                            <?php if (!empty($data['dokumen_pendukung'])): ?>
+                            <a href="../../uploads/dok/<?= $data['dokumen_pendukung'] ?>" target="_blank">
+                                ✅ <i class="fa fa-file-word"></i>Preview
+                            </a><br>
+                            <?php else: ?>
+                            <b>Belum ada file yang diupload</b>
+                            <?php endif; ?>
+                            <!-- <input type="file" name="dokumen_pendukung" class="form-control"> -->
+                        </div>
+
+                        <div class="form-group">
+                            <label>Keterangan</label>
+                            <?php if (!empty($data['keterangan_bukti'])): ?>
+                            <text name="keterangan_bukti" class="form-control"
+                                readonly><?= htmlspecialchars($data['keterangan_bukti'])  ?></text>
+                            <?php else: ?>
+                            <b>Belum ada keterangan</b>
+                            <?php endif; ?>
+                        </div>
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
         </div>
-        <!-- ============================================================== -->
-        <!-- End Page wrapper  -->
-        <!-- ============================================================== -->
+    </div>
+    <!-- ============================================================== -->
+    <!-- End Page wrapper  -->
+    <!-- ============================================================== -->
     </div>
     <!-- jQuery dan DataTables JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

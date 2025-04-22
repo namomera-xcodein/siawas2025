@@ -139,72 +139,78 @@ $requests = $stmt->get_result();
                                             Daftar permohonan yang diajukan oleh pemohon dan menunggu persetujuan Anda
                                         </h6>
                                         <div class="table-responsive">
-                                            <table id="zero_config" class="table table-striped table-bordered no-wrap">
-                                                <thead>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Tanggal Permohonan</th>
-                                                        <th>Nomor Permohonan</th>
-                                                        <th>Nama Pemohon</th>
-                                                        <th>Total Harga</th>
-                                                        <th>Status</th>
-                                                        <th>Aksi</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php $no = 1;
-                                                    while ($row = $requests->fetch_assoc()): ?>
-                                                    <tr>
-                                                        <td><?= $no++; ?></td>
-                                                        <td>
-                                                            <?= date('d F Y', strtotime($row['tanggal_permohonan'])); ?><br>
-                                                            <span
-                                                                class="text-muted"><?= date('H:i:s', strtotime($row['tanggal_permohonan'])); ?></span>
-                                                        </td>
-                                                        <td><?= htmlspecialchars($row['nomor_permohonan']); ?></td>
-                                                        <td><?= htmlspecialchars($row['nama_pemohon']); ?></td>
-                                                        <td>Rp
-                                                            <?= number_format($row['grand_total_harga'], 0, ',', '.'); ?>
-                                                        </td>
+                                            <?php if ($requests->num_rows == 0): ?>
+                                                <div class="alert alert-info">
+                                                    Belum ada permohonan baru
+                                                </div>
+                                            <?php else: ?>
+                                                <table id="zero_config" class="table table-striped table-bordered no-wrap">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Tanggal Permohonan</th>
+                                                            <th>Nomor Permohonan</th>
+                                                            <th>Nama Pemohon</th>
+                                                            <th>Total Harga</th>
+                                                            <th>Status</th>
+                                                            <th>Aksi</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <?php $no = 1;
+                                                        while ($row = $requests->fetch_assoc()): ?>
+                                                            <tr>
+                                                                <td><?= $no++; ?></td>
+                                                                <td>
+                                                                    <?= date('d F Y', strtotime($row['tanggal_permohonan'])); ?><br>
+                                                                    <span
+                                                                        class="text-muted"><?= date('H:i:s', strtotime($row['tanggal_permohonan'])); ?></span>
+                                                                </td>
+                                                                <td><?= htmlspecialchars($row['nomor_permohonan']); ?></td>
+                                                                <td><?= htmlspecialchars($row['nama_pemohon']); ?></td>
+                                                                <td>Rp
+                                                                    <?= number_format($row['grand_total_harga'], 0, ',', '.'); ?>
+                                                                </td>
 
-                                                        <td class="card-subtitle text-wrap ">
-                                                            <button type="button" class="btn btn-danger btn-sm"
-                                                                data-container="body" title="Status Permohonan"
-                                                                data-toggle="popover" data-placement="top"
-                                                                data-content="<?= htmlspecialchars($row['deskripsi_status']); ?>">
-                                                                <?= htmlspecialchars($row['nama_status']); ?>
-                                                            </button>
-                                                        </td>
+                                                                <td class="card-subtitle text-wrap ">
+                                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                                        data-container="body" title="Status Permohonan"
+                                                                        data-toggle="popover" data-placement="top"
+                                                                        data-content="<?= htmlspecialchars($row['deskripsi_status']); ?>">
+                                                                        <?= htmlspecialchars($row['nama_status']); ?>
+                                                                    </button>
+                                                                </td>
 
-                                                        <td>
-                                                            <a href="index.php?page=detail_permohonan&id=<?= $row['id']; ?>"
-                                                                class="btn btn-info btn-sm">
-                                                                📑 Detail
-                                                            </a>
-                                                            <a href="pages/pejabat2/proses_ttd.php?id_permohonan=<?= $row['id']; ?>"
-                                                                class="btn btn-success btn-sm"
-                                                                onclick="return confirm('Proses tanda tangan sekarang?')">
-                                                                ✍️ Tanda Tangan
-                                                            </a>
-                                                        </td>
+                                                                <td>
+                                                                    <a href="index.php?page=detail_permohonan&id=<?= $row['id']; ?>"
+                                                                        class="btn btn-info btn-sm">
+                                                                        📑 Detail
+                                                                    </a>
+                                                                    <a href="pages/pejabat2/proses_ttd.php?id_permohonan=<?= $row['id']; ?>"
+                                                                        class="btn btn-success btn-sm"
+                                                                        onclick="return confirm('Proses tanda tangan sekarang?')">
+                                                                        ✍️ Tanda Tangan
+                                                                    </a>
+                                                                </td>
 
 
-                                                    </tr>
-                                                    <?php endwhile; ?>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <th>No</th>
-                                                        <th>Tanggal Permohonan</th>
-                                                        <th>Nomor Permohonan</th>
-                                                        <th>Nama Pemohon</th>
-                                                        <th>Total Harga</th>
-                                                        <th>Status</th>
-                                                        <th>Aksi</th>
-                                                    </tr>
-                                                </tfoot>
+                                                            </tr>
+                                                        <?php endwhile; ?>
+                                                    </tbody>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <th>No</th>
+                                                            <th>Tanggal Permohonan</th>
+                                                            <th>Nomor Permohonan</th>
+                                                            <th>Nama Pemohon</th>
+                                                            <th>Total Harga</th>
+                                                            <th>Status</th>
+                                                            <th>Aksi</th>
+                                                        </tr>
+                                                    </tfoot>
 
-                                            </table>
+                                                </table>
+                                            <?php endif; ?>
                                         </div>
                                     </div>
                                 </div>
@@ -225,7 +231,25 @@ $requests = $stmt->get_result();
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 
     <script>
-    $(document).ready(function() {
-        $('#zero_config').DataTable();
-    });
+        $(document).ready(function() {
+            $('#zero_config').DataTable({
+                "searching": true,
+                "paging": true,
+                "pageLength": 10,
+                "language": {
+                    "search": "Pencarian:",
+                    "lengthMenu": "Tampilkan _MENU_ data per halaman",
+                    "zeroRecords": "Data tidak ditemukan",
+                    "info": "Menampilkan halaman _PAGE_ dari _PAGES_",
+                    "infoEmpty": "Tidak ada data yang tersedia",
+                    "infoFiltered": "(difilter dari _MAX_ total data)",
+                    "paginate": {
+                        "first": "Pertama",
+                        "last": "Terakhir",
+                        "next": "Selanjutnya",
+                        "previous": "Sebelumnya"
+                    }
+                }
+            });
+        });
     </script>

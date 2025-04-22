@@ -25,14 +25,13 @@ $query = "
     FROM permohonan p
     JOIN users u ON p.user_id = u.id
     LEFT JOIN status_permohonan s ON p.status2 = s.id_status
-    WHERE p.status2 = ? AND u.atasan_id = ?
     ORDER BY p.tanggal_permohonan DESC
 ";
 
 $stmt = $conn->prepare($query);
-$status = 0;
-$atasan_id = $_SESSION['user_id'];
-$stmt->bind_param("ii", $status, $atasan_id);
+//$status = 0;
+//$atasan_id = $_SESSION['user_id'];
+//$stmt->bind_param("ii", $status, $atasan_id);
 $stmt->execute();
 $requests = $stmt->get_result();
 ?>
@@ -141,8 +140,9 @@ $requests = $stmt->get_result();
                                 <div class="row">
                                     <!-- Column -->
                                     <div class="col-md-6 col-lg-3 col-xlg-3">
-                                        <div class="card card-hover">
-                                            <div class="p-2 bg-primary text-center">
+                                        <div class="card card-hover h-100">
+                                            <div
+                                                class="p-2 bg-primary text-center h-80 d-flex flex-column justify-content-center">
                                                 <?php
                                                 $id_katimja = $_SESSION['user_id'];
 
@@ -161,7 +161,7 @@ $requests = $stmt->get_result();
                                                 $total_menunggu = $row_menunggu['total_menunggu'] ?? 0;
                                                 ?>
                                                 <h1 class="font-light text-white"><?php echo $total_menunggu ?></h1>
-                                                <h6 class="text-white">Menunggu</h6>
+                                                <h6 class="text-white text-wrap">Menunggu</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -169,8 +169,9 @@ $requests = $stmt->get_result();
 
                                     <!-- Column -->
                                     <div class="col-md-6 col-lg-3 col-xlg-3">
-                                        <div class="card card-hover">
-                                            <div class="p-2 bg-success text-center">
+                                        <div class="card card-hover h-100">
+                                            <div
+                                                class="p-2 bg-success text-center h-80 d-flex flex-column justify-content-center">
 
                                                 <?php
                                                 $id_katimja = $_SESSION['user_id']; // ID Katimja dari session
@@ -197,7 +198,8 @@ $requests = $stmt->get_result();
                                                 <h1 class="font-light text-white">
                                                     <?php echo  $total_disetujui; ?>
                                                 </h1>
-                                                <h6 class="text-white">Disetujui</h6>
+                                                <h6 class="text-white text-wrap">Permohonan
+                                                    Disetujui</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -222,7 +224,7 @@ $requests = $stmt->get_result();
                                                 ?>
 
                                                 <h1 class="font-light text-white"><?php echo $total_ditolak ?></h1>
-                                                <h6 class="text-white">Ditolak</h6>
+                                                <h6 class="text-white text-wrap">Permohonan Ditolak</h6>
                                             </div>
                                         </div>
                                     </div>
@@ -231,7 +233,24 @@ $requests = $stmt->get_result();
                                         <div class="card card-hover">
 
                                             <div class="p-2 bg-cyan text-center">
-                                                <h1 class="font-light text-white">1,738</h1>
+                                                <?php
+                                                $id_katimja = $_SESSION['user_id'];
+
+                                                $query_proses = "
+                                                    SELECT COUNT(*) AS total_proses
+                                                    FROM permohonan p
+                                                    JOIN users u ON p.user_id = u.id
+                                                    WHERE u.atasan_id = ?
+                                                ";
+
+                                                $stmt_proses = $conn->prepare($query_proses);
+                                                $stmt_proses->bind_param("i", $id_katimja);
+                                                $stmt_proses->execute();
+                                                $result_proses = $stmt_proses->get_result();
+                                                $row_proses = $result_proses->fetch_assoc();
+                                                $total_proses = $row_proses['total_proses'] ?? 0;
+                                                ?>
+                                                <h1 class="font-light text-white"><?php echo $total_proses ?></h1>
                                                 <h6 class="text-white">Permohonan Proses</h6>
                                             </div>
                                         </div>
@@ -245,14 +264,26 @@ $requests = $stmt->get_result();
                                     Anda
 
                                 </h6>
+                                <!-- CSS DataTables -->
+                                <link rel="stylesheet"
+                                    href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+                                <!-- jQuery -->
+                                <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+                                <!-- JS DataTables -->
+                                <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
                                 <div class="table-responsive">
-                                    <table id="zero_config" class="table table-striped table-bordered no-wrap">
+                                    <table id="zero_config" id="tabelPermohonan"
+                                        class="table table-striped table-bordered no-wrap">
                                         <thead>
                                             <tr>
                                                 <th>No</th>
                                                 <th>Tanggal Permohonan</th>
                                                 <th>Nomor Permohonan</th>
                                                 <th>Nama Pemohon</th>
+                                                <th>Total Harga</th>
                                                 <th>Status</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -260,28 +291,31 @@ $requests = $stmt->get_result();
                                         <tbody>
                                             <?php $no = 1;
                                             while ($row = $requests->fetch_assoc()) { ?>
-                                                <tr>
-                                                    <td><?= $no++; ?></td>
-                                                    <td><?= date('d F Y H:i:s', strtotime($row['tanggal_permohonan'])); ?>
-                                                    </td>
-                                                    <td><?= htmlspecialchars($row['nomor_permohonan']); ?></td>
-                                                    <td><?= htmlspecialchars($row['nama_pemohon']); ?></td>
-                                                    <td class="card-subtitle text-wrap ">
-                                                        <button type="button" class="btn btn-danger btn-sm"
-                                                            data-container="body" title="Status Permohonan"
-                                                            data-toggle="popover" data-placement="top"
-                                                            data-content="<?= htmlspecialchars($row['deskripsi_status'] ?? '-'); ?>">
-                                                            <?= htmlspecialchars($row['nama_status'] ?? 'Status Tidak Diketahui'); ?>
-                                                        </button>
-                                                    </td>
+                                            <tr>
+                                                <td><?= $no++; ?></td>
+                                                <td><?= date('d F Y H:i:s', strtotime($row['tanggal_permohonan'])); ?>
+                                                </td>
+                                                <td><?= htmlspecialchars($row['nomor_permohonan']); ?></td>
+                                                <td><?= htmlspecialchars($row['nama_pemohon']); ?></td>
+                                                <td>Rp.
+                                                    <?= number_format(htmlspecialchars($row['grand_total_harga']), 0, ',', '.'); ?>
+                                                </td>
+                                                <td class="card-subtitle text-wrap ">
+                                                    <button type="button" class="btn btn-danger btn-sm"
+                                                        data-container="body" title="Status Permohonan"
+                                                        data-toggle="popover" data-placement="top"
+                                                        data-content="<?= htmlspecialchars($row['deskripsi_status'] ?? '-'); ?>">
+                                                        <?= htmlspecialchars($row['nama_status'] ?? 'Status Tidak Diketahui'); ?>
+                                                    </button>
+                                                </td>
 
-                                                    <td>
-                                                        <a href="index.php?page=detail_permohonan&id=<?= $row['id']; ?>"
-                                                            class="btn btn-info btn-sm">
-                                                            📑 Detail
-                                                        </a>
-                                                    </td>
-                                                </tr>
+                                                <td>
+                                                    <a href="index.php?page=detail_permohonan&id=<?= $row['id']; ?>"
+                                                        class="btn btn-info btn-sm">
+                                                        📑 Detail
+                                                    </a>
+                                                </td>
+                                            </tr>
                                             <?php } ?>
                                         </tbody>
                                         <tfoot>
@@ -290,6 +324,7 @@ $requests = $stmt->get_result();
                                                 <th>Tanggal Permohonan</th>
                                                 <th>Nomor Permohonan</th>
                                                 <th>Nama Pemohon</th>
+                                                <th>Total Harga</th>
                                                 <th>Status</th>
                                                 <th>Aksi</th>
                                             </tr>
@@ -340,14 +375,33 @@ $requests = $stmt->get_result();
     <!--This page plugins -->
     <script src="../assets/extra-libs/datatables.net/js/jquery.dataTables.min.js"></script>
     <script src="../dist/js/pages/datatable/datatable-basic.init.js"></script>
+    <!-- CSS DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+
+    <!-- JS DataTables -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
 </body>
 <script>
-    $(function() {
-        $('[data-toggle="popover"]').popover({
-            trigger: 'hover',
-            html: true
-        });
+$(function() {
+    $('[data-toggle="popover"]').popover({
+        trigger: 'hover',
+        html: true
     });
+});
+</script>
+<script>
+$(document).ready(function() {
+    $('#tabelPermohonan').DataTable({
+        "pageLength": 10, // jumlah baris per halaman
+        "lengthChange": true, // user bisa pilih jumlah data
+        "searching": true, // aktifkan pencarian
+        "ordering": true, // aktifkan pengurutan kolom
+    });
+});
 </script>
 
 

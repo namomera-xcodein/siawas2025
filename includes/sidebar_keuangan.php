@@ -20,18 +20,26 @@ error_reporting(E_ALL);
                 <li class="list-divider"></li>
                 <li class="nav-small-cap"><span class="hide-menu">Permohonan</span></li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link sidebar-link" href="index.php?page=profile" aria-expanded="false"><i
-                            data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Profile</span></a>
+                    <a class="sidebar-link sidebar-link" href="index.php?page=all_permohonan" aria-expanded="false"><i
+                            data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Semua
+                            Permohonan</span></a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link sidebar-link" href="index.php?page=profile" aria-expanded="false"><i
-                            data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Profile</span></a>
+                    <a class="sidebar-link sidebar-link" href="index.php?page=permohonan_pencairan"
+                        aria-expanded="false"><i data-feather="file-text" class="feather-icon"></i><span
+                            class="hide-menu">Menunggu Dana</span></a>
                 </li>
                 <li class="sidebar-item">
-                    <a class="sidebar-link sidebar-link" href="index.php?page=profile" aria-expanded="false"><i
-                            data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Profile</span></a>
+                    <a class="sidebar-link sidebar-link" href="index.php?page=proses_belanja" aria-expanded="false"><i
+                            data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Proses
+                            Belanja</span></a>
                 </li>
                 <li class="sidebar-item">
+                    <a class="sidebar-link sidebar-link" href="index.php?page=permohonan_selesai"
+                        aria-expanded="false"><i data-feather="file-text" class="feather-icon"></i><span
+                            class="hide-menu">Permohonan Selesai</span></a>
+                </li>
+                <!-- <li class="sidebar-item">
                     <a class="sidebar-link has-arrow" href="javascript:void(0)" aria-expanded="false"><i
                             data-feather="file-text" class="feather-icon"></i><span class="hide-menu">Permohonan
                         </span></a>
@@ -50,7 +58,7 @@ error_reporting(E_ALL);
                                     Detail Permohonan </span></a>
                         </li>
                     </ul>
-                </li>
+                </li> -->
                 <!-- end form Permohonan -->
 
                 <!-- <li class="list-divider"></li>

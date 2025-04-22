@@ -1,0 +1,19 @@
+# Cegah eksekusi file PHP di folder ini
+
+<FilesMatch "\.(php|php5|phtml)$">
+Order Allow,Deny
+Deny from all
+</FilesMatch>
+
+# Izinkan akses ke file tertentu seperti gambar, PDF, dan dokumen
+
+<FilesMatch "\.(jpg|jpeg|png|gif|pdf|doc|docx)$">
+Order Allow,Deny
+Allow from all
+</FilesMatch>
+
+# Cegah directory listing
+
+Options -Indexes
+
+# Cegah akses ke file .htaccess

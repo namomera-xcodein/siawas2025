@@ -40,7 +40,7 @@ function getAllRequestsAdmin($conn)
 
 $requests = getAllRequestsAdmin($conn);
 
-$base_url = "http://localhost/sipatra2025";
+//$base_url = "http://localhost/sipatra2025";
 ?>
 <!DOCTYPE html>
 <html dir="ltr" lang="en">
