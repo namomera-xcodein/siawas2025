@@ -60,6 +60,54 @@ while ($row = $resultLine->fetch_assoc()) {
     $lineLabels[] = date('F Y', strtotime($row['bulan'] . "-01"));
     $lineData[] = (float) $row['total'];
 }
+
+$query = "
+    SELECT 
+        YEAR(tanggal_permohonan) AS tahun, 
+        MONTH(tanggal_permohonan) AS bulan,
+        COUNT(*) AS jumlah
+    FROM permohonan
+    WHERE YEAR(tanggal_permohonan) IN (YEAR(CURDATE()) - 1, YEAR(CURDATE()))
+    GROUP BY tahun, bulan
+    ORDER BY bulan ASC, tahun ASC
+";
+$result = $conn->query($query);
+
+// Siapkan array kosong
+$dataChart = [];
+
+// Inisialisasi data per bulan
+for ($i = 1; $i <= 12; $i++) {
+    $dataChart[$i] = [
+        'bulan' => date('F', mktime(0, 0, 0, $i, 10)),
+        'y' => 0, // Tahun sebelumnya
+        'z' => 0  // Tahun sekarang
+    ];
+}
+
+$tahun_sekarang = date('Y');
+$tahun_lalu = $tahun_sekarang - 1;
+
+while ($row = $result->fetch_assoc()) {
+    $bulan = (int)$row['bulan'];
+    if ($row['tahun'] == $tahun_lalu) {
+        $dataChart[$bulan]['y'] = (int)$row['jumlah'];
+    } elseif ($row['tahun'] == $tahun_sekarang) {
+        $dataChart[$bulan]['z'] = (int)$row['jumlah'];
+    }
+}
+
+// Encode jadi JSON
+$morris_data = [];
+
+foreach ($dataChart as $bulan => $item) {
+    $morris_data[] = [
+        'bulan' => $item['bulan'],
+        'Tahun_Lalu' => $item['y'],
+        'Tahun_Sekarang' => $item['z']
+    ];
+}
+
 ?>
 
 <!-- ============================================================== -->
@@ -91,7 +139,10 @@ while ($row = $resultLine->fetch_assoc()) {
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Status Permohonan</h4>
-                        <canvas id="donutChart"></canvas>
+                        <div class="chart-container" style="position: relative; height: 400px; width: 100%;">
+                            <canvas id="donutChart"></canvas>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -101,7 +152,9 @@ while ($row = $resultLine->fetch_assoc()) {
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Jumlah Permohonan per Bulan</h4>
-                        <canvas id="barChart"></canvas>
+                        <div class="chart-container" style="position: relative; height: 400px; width: 100%;">
+                            <canvas id="barChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -111,10 +164,26 @@ while ($row = $resultLine->fetch_assoc()) {
                 <div class="card">
                     <div class="card-body">
                         <h4 class="card-title">Total Nilai Permohonan per Bulan</h4>
-                        <canvas id="lineChart"></canvas>
+                        <div class="chart-container" style="position: relative; height: 400px; width: 100%;">
+                            <canvas id="lineChart"></canvas>
+                        </div>
+
                     </div>
                 </div>
             </div>
+
+            <!-- column -->
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title">Perbandingan Jumlah Permohonan: <?= $tahun_lalu ?> vs
+                            <?= $tahun_sekarang ?></h4>
+                        <div id="morris-bar-chart" style="height: 350px;"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- column -->
+
         </div>
 
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -213,5 +282,19 @@ while ($row = $resultLine->fetch_assoc()) {
                 }
             });
         </script>
+
+        <script>
+            new Morris.Bar({
+                element: 'morris-bar-chart',
+                data: <?= json_encode($morris_data); ?>,
+                xkey: 'bulan',
+                ykeys: ['Tahun_Lalu', 'Tahun_Sekarang'],
+                labels: ['<?= $tahun_lalu ?>', '<?= $tahun_sekarang ?>'],
+                barColors: ['#1e88e5', '#ffb22b'],
+                hideHover: 'auto',
+                resize: true
+            });
+        </script>
+
     </div>
 </div>
