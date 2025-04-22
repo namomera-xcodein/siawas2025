@@ -1,3 +1,67 @@
+<?php
+//include '../../koneksi.php';
+
+/// ===== 1. Donut Chart: Jumlah permohonan berdasarkan status_permohonan =====
+$statusQuery = $conn->query("SELECT id_status, nama_status FROM status_permohonan");
+$statusLabelsMap = [];
+$statusDataMap = [];
+
+// Inisialisasi label dan data default
+while ($row = $statusQuery->fetch_assoc()) {
+    $statusLabelsMap[$row['id_status']] = $row['nama_status'];
+    $statusDataMap[$row['id_status']] = 0;
+}
+
+// Hitung jumlah permohonan per status2
+$permohonanQuery = $conn->query("SELECT status2, COUNT(*) as jumlah FROM permohonan GROUP BY status2");
+while ($row = $permohonanQuery->fetch_assoc()) {
+    $statusDataMap[$row['status2']] = $row['jumlah'];
+}
+
+$donutLabels = array_values($statusLabelsMap);
+$donutData = array_values($statusDataMap);
+
+
+/// ===== 2. Bar Chart: Jumlah permohonan per bulan =====
+$barLabels = [];
+$barData = [];
+
+$queryBar = "
+    SELECT 
+        DATE_FORMAT(tanggal_permohonan, '%Y-%m') AS bulan, 
+        COUNT(*) AS jumlah 
+    FROM permohonan 
+    GROUP BY bulan 
+    ORDER BY bulan ASC
+";
+$resultBar = $conn->query($queryBar);
+
+while ($row = $resultBar->fetch_assoc()) {
+    $barLabels[] = date('F Y', strtotime($row['bulan'] . "-01"));
+    $barData[] = $row['jumlah'];
+}
+
+
+/// ===== 3. Line Chart: Total Nilai Permohonan per Bulan =====
+$lineLabels = [];
+$lineData = [];
+
+$queryLine = "
+    SELECT 
+        DATE_FORMAT(tanggal_permohonan, '%Y-%m') AS bulan,
+        SUM(grand_total_harga) AS total
+    FROM permohonan
+    GROUP BY bulan
+    ORDER BY bulan ASC
+";
+$resultLine = $conn->query($queryLine);
+
+while ($row = $resultLine->fetch_assoc()) {
+    $lineLabels[] = date('F Y', strtotime($row['bulan'] . "-01"));
+    $lineData[] = (float) $row['total'];
+}
+?>
+
 <!-- ============================================================== -->
 <!-- Page wrapper  -->
 <!-- ============================================================== -->
