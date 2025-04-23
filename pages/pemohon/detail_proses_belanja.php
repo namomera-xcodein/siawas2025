@@ -660,7 +660,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                                     Hapus jika Keterangan jika ingin ubah
                                 </small>
                                 <textarea class="form-control" name="keterangan"
-                                    rows="3"><?= htmlspecialchars($data['keterangan_bukti']) ?></textarea>
+                                    rows="3"><?= htmlspecialchars($data['keterangan_bukti'] ?? '') ?></textarea>
                             </div>
                             <!-- <div class="form-group">
                                 <label>Keterangan</label><br>
@@ -672,7 +672,7 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
                             </div> -->
                             <div class="form-action">
                                 <div class="text-left">
-                                    <button type="submit" class="btn btn-primary">Update</button>
+                                    <button type="submit" class="btn btn-primary">Tambah|Update</button>
                                 </div>
                             </div>
                         </form>
